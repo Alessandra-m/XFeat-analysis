@@ -1,7 +1,7 @@
 
 # XFeat: инференс и анализ архитектуры
 
-Анализ модели XFeat (Potje et al., «XFeat: Accelerated Features for Lightweight Image Matching», CVPR 2024). Код модели и предобученные веса принадлежат авторам: [verlab/accelerated_features](https://github.com/verlab/accelerated_features) (Apache 2.0). Здесь они подключены как git submodule без изменений, закреплённые на коммите `e92685f`.
+Анализ модели XFeat (Potje et al., «XFeat: Accelerated Features for Lightweight Image Matching», CVPR 2024). Код модели и предобученные веса принадлежат авторам: [verlab/accelerated_features](https://github.com/verlab/accelerated_features) (Apache 2.0). Здесь они подключены как git submodule без изменений.
 
 ### Структура
 
