@@ -79,7 +79,6 @@ def main():
         unfolded = net._unfold2d(gray, ws=8)
     print(f"\nkeypoint head input: gray {tuple(gray.shape)} -> unfold 8x8 {tuple(unfolded.shape)}")
 
-    # pyramid fusion: x4, x5 upsampled to x3 resolution and summed
     print("FPN fusion: block3 {} + up(block4 {}) + up(block5 {}) -> block_fusion {}".format(
         by_name["block3"][1], by_name["block4"][1], by_name["block5"][1], by_name["block_fusion"][1]))
 

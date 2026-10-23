@@ -50,7 +50,6 @@ def draw_matches(img_ref, img_tgt, pts_ref, pts_tgt):
 def save_reliability(heatmap, img, path, overlay_path):
     rel = heatmap[0, 0].detach().cpu().numpy()
     rel = (rel - rel.min()) / (rel.max() - rel.min() + 1e-9)
-    # map is H/8 x W/8 of the resized input, which covers the whole image
     h, w = img.shape[:2]
     rel = cv2.resize(rel, (w, h), interpolation=cv2.INTER_LINEAR)
     rel = (rel * 255).astype(np.uint8)

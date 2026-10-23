@@ -27,14 +27,12 @@ def reprojection_errors(pts0, pts1, H):
 
 
 def texture(h, w, seed=0):
-    """Smooth random texture in [-100, 100]."""
     t = np.random.default_rng(seed).standard_normal((h, w)).astype(np.float32)
     t = cv2.GaussianBlur(t, (0, 0), 3)
     return 100 * t / np.abs(t).max()
 
 
 def encode(t, mode):
-    """Put the texture into brightness, or into hue only (channel mean stays 128)."""
     img = np.full(t.shape + (3,), 128, dtype=np.float32)
     if mode == "gray":
         img += t[..., None]
@@ -47,7 +45,6 @@ def encode(t, mode):
 def report_grayscale(xfeat, img):
     print("1. grayscale input")
 
-    # channel order does not matter: the net averages channels
     with torch.inference_mode():
         x, _, _ = xfeat.preprocess_tensor(img)
         f_bgr, _, _ = xfeat.net(x)
@@ -55,7 +52,6 @@ def report_grayscale(xfeat, img):
     rel = ((f_bgr - f_rgb).norm() / f_bgr.norm()).item()
     print(f"  descriptors BGR vs GBR permutation: relative diff = {rel:.1e}")
 
-    # same texture in brightness vs in hue only (red - green, equal channel mean)
     t = texture(576, 800)
     for mode in ["gray", "hue"]:
         im = encode(t, mode)
@@ -100,7 +96,6 @@ def report_rotation(xfeat, img):
 
 def report_subpixel(xfeat, img):
     print("\n3. subpixel accuracy: ref -> ref shifted by dx px along x")
-    # crop to a multiple of 32 so preprocess_tensor does not rescale coordinates
     img = img[:576, :800]
     h, w = img.shape[:2]
 
@@ -130,7 +125,6 @@ def report_subpixel(xfeat, img):
 def report_refinement_center(xfeat, img):
     print("\n4. refinement zero bin: official center 4 vs center 3")
 
-    # identical pair: the true offset is zero, so the argmax bin is the learned zero
     with torch.inference_mode():
         _, _, bins = coarse_and_refined(xfeat, img, img)
     vals, counts = np.unique(bins, return_counts=True)
