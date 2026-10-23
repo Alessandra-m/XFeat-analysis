@@ -77,8 +77,9 @@ def summarize(name, err):
           f"{100 * (err < 1).mean():>9.1f}%{100 * (err < 3).mean():>9.1f}%")
 
 
-def coarse_and_refined(xfeat, img0, img1):
-    """XFeat* matches with and without the refinement offsets."""
+def coarse_and_refined(xfeat, img0, img1, center=4):
+    """XFeat* matches with and without the refinement offsets, plus argmax bins.
+    center is the bin treated as zero offset (4 in the official code)."""
     out0 = xfeat.detectAndComputeDense(xfeat.parse_input(img0), top_k=TOP_K)
     out1 = xfeat.detectAndComputeDense(xfeat.parse_input(img1), top_k=TOP_K)
     idx0, idx1 = xfeat.batch_match(out0["descriptors"], out1["descriptors"])[0]
@@ -89,12 +90,14 @@ def coarse_and_refined(xfeat, img0, img1):
 
     logits = xfeat.net.fine_matcher(torch.cat([f0, f1], dim=-1))
     conf = F.softmax(logits * 3, dim=-1).max(dim=-1)[0]
-    offsets = xfeat.subpix_softmax2d(logits.view(-1, 8, 8))
+    # subpix_softmax2d measures offsets from bin W//2 = 4
+    offsets = xfeat.subpix_softmax2d(logits.view(-1, 8, 8)) + (4 - center)
     good = conf > 0.25
 
     coarse = k0[good].cpu().numpy(), k1[good].cpu().numpy()
     refined = (k0 + offsets * sc0[:, None])[good].cpu().numpy(), k1[good].cpu().numpy()
-    return coarse, refined
+    bins = logits.argmax(dim=-1)[good].cpu().numpy()
+    return coarse, refined, bins
 
 
 def report_refinement(xfeat, img):
@@ -108,7 +111,7 @@ def report_refinement(xfeat, img):
         m0, m1 = xfeat.match_xfeat(img, warped, top_k=TOP_K)
         summarize("sparse (detector + MNN)", reprojection_errors(m0, m1, H_GT))
 
-        coarse, refined = coarse_and_refined(xfeat, img, warped)
+        coarse, refined, _ = coarse_and_refined(xfeat, img, warped)
         summarize("XFeat* coarse (8x8 grid)", reprojection_errors(*coarse, H_GT))
         summarize("XFeat* refined", reprojection_errors(*refined, H_GT))
 
@@ -141,21 +144,20 @@ def report_reliability(xfeat, img):
 
     # coarse points are cell corners, so allow one cell of error
     correct = reprojection_errors(pts0, pts1, H_GT) < 8
-    print(f"\nall {len(rel)} cells, {len(pts0)} MNN matches; accuracy (<8px) by reliability quartile")
-    qs = np.quantile(rel_matched, [0, 0.25, 0.5, 0.75, 1])
-    for i in range(4):
-        sel = (rel_matched >= qs[i]) & (rel_matched <= qs[i + 1])
-        print(f"  Q{i + 1} reliability {qs[i]:.3f}-{qs[i + 1]:.3f}: {100 * correct[sel].mean():5.1f}%")
 
-    # how many cells of each quartile survive the mutual nearest neighbour check
     rel_all = rel[order].cpu().numpy()
     mutual = np.zeros(len(rel_all), dtype=bool)
     mutual[idx0.cpu().numpy()] = True
+
+    # one set of quartile bounds over all cells for both columns
     qs = np.quantile(rel_all, [0, 0.25, 0.5, 0.75, 1])
-    print("share of cells with a mutual match, by reliability quartile over all cells")
+    print(f"\nall {len(rel)} cells, {len(pts0)} MNN matches; quartiles of reliability over all cells")
+    print(f"  {'quartile':<10}{'reliability':<14}{'cells':>7}{'mutual':>9}{'matches':>9}{'correct <8px':>14}")
     for i in range(4):
-        sel = (rel_all >= qs[i]) & (rel_all <= qs[i + 1])
-        print(f"  Q{i + 1} reliability {qs[i]:.3f}-{qs[i + 1]:.3f}: {100 * mutual[sel].mean():5.1f}%")
+        sel_all = (rel_all >= qs[i]) & (rel_all <= qs[i + 1])
+        sel = (rel_matched >= qs[i]) & (rel_matched <= qs[i + 1])
+        print(f"  Q{i + 1:<9}{qs[i]:.3f}-{qs[i + 1]:.3f}  {sel_all.sum():>7}{100 * mutual[sel_all].mean():>8.1f}%"
+              f"{sel.sum():>9}{100 * correct[sel].mean():>13.1f}%")
 
 
 def main():

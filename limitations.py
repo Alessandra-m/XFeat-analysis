@@ -5,6 +5,7 @@ import numpy as np
 import torch
 
 from paths import XFEAT_DIR
+from decisions import H_GT, coarse_and_refined
 from modules.xfeat import XFeat
 
 REF_PATH = os.path.join(XFEAT_DIR, "assets", "ref.png")
@@ -126,6 +127,36 @@ def report_subpixel(xfeat, img):
               f"{'':>14}({signed[0]:+.2f}, {signed[1]:+.2f})")
 
 
+def report_refinement_center(xfeat, img):
+    print("\n4. refinement zero bin: official center 4 vs center 3")
+
+    # identical pair: the true offset is zero, so the argmax bin is the learned zero
+    with torch.inference_mode():
+        _, _, bins = coarse_and_refined(xfeat, img, img)
+    vals, counts = np.unique(bins, return_counts=True)
+    top = np.argsort(-counts)[:3]
+    print("  identical pair, most frequent argmax bins (x, y): " + ", ".join(
+        f"({vals[i] % 8}, {vals[i] // 8}) {100 * counts[i] / len(bins):.1f}%" for i in top))
+
+    h, w = img.shape[:2]
+    crop = img[:576, :800]
+    A = np.float32([[1, 0, 0.5], [0, 1, 0]])
+    pairs = [
+        ("homography H_gt", img, cv2.warpPerspective(img, H_GT, (w, h)), H_GT),
+        ("shift dx = 0.5", crop,
+         cv2.warpAffine(crop, A, (800, 576), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT),
+         np.vstack([A, [0, 0, 1]]).astype(np.float64)),
+        ("identical pair", img, img, np.eye(3)),
+    ]
+    print(f"  {'pair':<18}{'center':>8}{'median':>10}{'<1px':>10}")
+    for name, im0, im1, H in pairs:
+        for center in [4, 3]:
+            with torch.inference_mode():
+                _, refined, _ = coarse_and_refined(xfeat, im0, im1, center=center)
+            err = reprojection_errors(*refined, H)
+            print(f"  {name:<18}{center:>8}{np.median(err):>10.2f}{100 * (err < 1).mean():>9.1f}%")
+
+
 def main():
     xfeat = XFeat()
     img = load_image(REF_PATH)
@@ -133,6 +164,7 @@ def main():
     report_grayscale(xfeat, img)
     report_rotation(xfeat, img)
     report_subpixel(xfeat, img)
+    report_refinement_center(xfeat, img)
 
 
 if __name__ == "__main__":
