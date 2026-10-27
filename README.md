@@ -1,4 +1,4 @@
-# XFeat: инференс и анализ архитектуры
+# XFeat
 
 Анализ модели XFeat (Potje et al., «XFeat: Accelerated Features for Lightweight Image Matching», CVPR 2024). Код модели и предобученные веса принадлежат авторам: [verlab/accelerated_features](https://github.com/verlab/accelerated_features) (Apache 2.0). Здесь они подключены как git submodule без изменений.
 
@@ -124,7 +124,6 @@ python inference.py      # затем shapes.py, decisions.py, limitations.py
 
 В прогоне `shapes.py` N = 4095, а не 4096. `extract_dualscale` берёт `int(0.2·top_k) + int(0.8·top_k)` = 819 + 3276 = 4095 ячеек: одна теряется при округлении. В примере изображение матчится само с собой, поэтому все 4095 ячеек получают пару.
 
-- Вход keypoint head по форме совпадает с признаками backbone, но это 64 сырых пикселя каждого патча 8×8 (`_unfold2d(x, ws=8)`). От backbone он не зависит.
 - После softmax и depth-to-space (`get_kpts_heatmap`) логиты K превращаются в карту вероятностей полного разрешения 1×576×800.
 - Дескрипторы M на выходе сети не нормированы, L2-нормировка делается в `detectAndCompute`.
 
@@ -192,7 +191,7 @@ python inference.py      # затем shapes.py, decisions.py, limitations.py
    - `coordinate_classification_loss` — через `fine_matcher(feats)` (refinement);
    - `keypoint_loss(h1, conf)` — reliability: `h1 = heatmap_head(feats)` берётся **без** `.detach()` на `feats`, поэтому градиент идёт `L1 → sigmoid(R) → heatmap_head → feats → backbone`. Детачится только таргет `conf` (он считается внутри `with torch.no_grad()` в `dual_softmax_loss`) — это и есть смысл фразы статьи «для L_rel градиент идёт только через R».
 
-   Итог: от backbone отцеплена одна ветка — keypoint-детектор. Reliability — надстройка над дескрипторами и backbone тоже подтачивает (вторично, доминирует дескрипторный лосс).
+   Итог: от backbone отцеплена одна ветка — keypoint-детектор. Reliability — надстройка над дескрипторами и через `feats` тоже влияет на backbone. Четыре лосса усредняются с множителями (×3 у reliability, ×2 у refinement и детектора), но их относительный вклад в градиент backbone не измерялся.
 3. **Дешевизна.** Свёртки 1×1 на карте 1/8 почти ничего не стоят. Детектор остаётся необязательным: в XFeat* голова вычисляется при каждом `forward`, но её выход не используется.
 4. **Обучение через дистилляцию.** Детектор учится повторять точки ALIKE (`alike_distill_loss`), поэтому собственного self-supervised обучения детекции (как в SuperPoint) не нужно.
 

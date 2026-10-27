@@ -62,7 +62,6 @@ def load_pair(root, seq, i, short):
     return img0, img1, S1 @ H @ np.linalg.inv(S0)
 
 
-
 def make_matcher(name, top_k):
     """Return (fn(img0, img1) -> (mkpts0, mkpts1), info dict)."""
     if name == "xfeat":
@@ -235,11 +234,25 @@ def git_commit(path):
         return None
 
 
+def git_dirty(path):
+    """True if tracked code differs from HEAD; results/ is ignored, runs rewrite it."""
+    if not os.path.exists(os.path.join(path, ".git")):
+        return None
+    try:
+        out = subprocess.check_output(
+            ["git", "-C", path, "status", "--porcelain", "--untracked-files=no",
+             "--", ".", ":(exclude)results"], stderr=subprocess.DEVNULL, text=True)
+        return bool(out.strip())
+    except Exception:
+        return None
+
+
 def environment(matcher_info):
     env = {"python": sys.version.split()[0], "platform": platform.platform(),
            "processor": platform.processor() or platform.machine(),
            "opencv": cv2.__version__, "numpy": np.__version__,
-           "repo_commit": git_commit(HERE), "xfeat_commit": git_commit(XFEAT_DIR)}
+           "repo_commit": git_commit(HERE), "repo_dirty": git_dirty(HERE),
+           "xfeat_commit": git_commit(XFEAT_DIR)}
     env.update(matcher_info)
     return env
 
