@@ -105,7 +105,7 @@ def main():
     results = {}
     for label, fn in (("extract", run_extract), ("match", run_match),
                       ("extract_match", run_extract_match)):
-        for _ in range(args.warmup): 
+        for _ in range(args.warmup):
             fn()
         sync()
         times_ms = []

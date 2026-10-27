@@ -2,23 +2,38 @@
 
 Анализ модели XFeat (Potje et al., «XFeat: Accelerated Features for Lightweight Image Matching», CVPR 2024). Код модели и предобученные веса принадлежат авторам: [verlab/accelerated_features](https://github.com/verlab/accelerated_features) (Apache 2.0). Здесь они подключены как git submodule без изменений.
 
+**Замеры качества и скорости на HPatches → [EVAL_HPATCHES_SPEED.md](EVAL_HPATCHES_SPEED.md)** (протокол, метрики MMA/AUC/MHA, скорость на CPU и GPU, сравнение с числами статьи; JSON с результатами — в [`results/`](results/)).
+
+| Что | Результат | Статья |
+|---|---|---|
+| MHA@3/5/7, illumination | 96.1 / 98.3 / 99.0 % | 95.0 / 98.1 / 98.8 % |
+| MHA@3/5/7, viewpoint | 77.6 / 86.1 / 89.2 % | 68.6 / 81.1 / 86.1 % |
+| Извлечение признаков, VGA, CPU (4 потока) | 28.7 FPS | 27.1 FPS (i5-1135G7) |
+| Извлечение признаков, VGA, GPU RTX 3050 | 245 FPS | — |
+
+Этот README — разбор архитектуры (задания 1–4 ниже), EVAL_HPATCHES_SPEED.md — оценка на бенчмарке.
+
 ### Структура
 
 | Путь | Содержимое |
 |---|---|
-| `inference.py` | задание 1: инференс, карта надёжности, матчинг |
-| `shapes.py` | задание 2: размеры тензоров по веткам |
-| `decisions.py` | задание 3: замеры вычислений, надёжности и refinement |
-| `limitations.py` | задание 4: полутоновый вход, поворот, субпиксельная точность |
+| `inference.py` | инференс, карта надёжности, матчинг |
+| `shapes.py` | размеры тензоров по веткам |
+| `decisions.py` | замеры вычислений, надёжности и refinement |
+| `limitations.py` | полутоновый вход, поворот, субпиксельная точность |
 | `paths.py` | пути к подмодулю и папке результатов |
-| `results/` | изображения, полученные `inference.py` |
+| `hpatches_check.py` | замеры: проверка структуры HPatches |
+| `hpatches_eval.py` | замеры: MMA, AUC, MHA на HPatches |
+| `speed_benchmark.py` | замеры: скорость extract / match / пара |
+| `EVAL_HPATCHES_SPEED.md` | отчёт: качество на HPatches и скорость на CPU/GPU |
+| `results/` | изображения `inference.py` и JSON с результатами замеров |
 | `third_party/accelerated_features/` | оригинальный репозиторий XFeat (submodule) |
 
 ### Запуск
 
 ```bash
 git clone --recurse-submodules git@github.com:Alessandra-m/XFeat-analysis.git
-cd xfeat-analysis
+cd XFeat-analysis
 pip install -r third_party/accelerated_features/requirements.txt
 python inference.py      # затем shapes.py, decisions.py, limitations.py
 ```
@@ -40,7 +55,7 @@ python inference.py      # затем shapes.py, decisions.py, limitations.py
 |---|---|---|
 | Загрузка модели | `XFeat()` | `XFeatModel` с весами `xfeat.pt`, режим `eval` |
 | Ключевые точки и дескрипторы (sparse) | `xfeat.detectAndCompute(img, top_k=4096)` | keypoints 4096×2, descriptors 4096×64, scores 4096 |
-| Карта надёжности | `xfeat.net(x)` | 1×1×72×100, растянута до 800×600: `stage1_reliability.png`, наложение `stage1_reliability_overlay.png` |
+| Карта надёжности | `xfeat.net(x)` | 1×1×72×100, растянута до 800×600: `inference_reliability.png`, наложение `inference_reliability_overlay.png` |
 | Матчинг (semi-dense, XFeat*) | `xfeat.match_xfeat_star(ref, tgt, top_k=4096)` | 613 совпадений |
 | Фильтрация | `cv2.findHomography(..., USAC_MAGSAC, 3.5)` | 472 инлаера (77%) |
 
@@ -53,15 +68,15 @@ python inference.py      # затем shapes.py, decisions.py, limitations.py
 
 Совпадения после MAGSAC:
 
-![matches](results/stage1_matches.png)
+![matches](results/inference_matches.png)
 
 Карта надёжности эталонного изображения. Сеть выдаёт её в разрешении H/8×W/8 = 72×100. Для визуализации она нормирована min-max и билинейно растянута до исходных 800×600. Растяжение корректно, потому что предобработка ресайзит изображение, а не обрезает, и карта покрывает его целиком.
 
-![reliability](results/stage1_reliability.png)
+![reliability](results/inference_reliability.png)
 
 Наложение на изображение (синий цвет — низкая надёжность, красный — высокая):
 
-![reliability overlay](results/stage1_reliability_overlay.png)
+![reliability overlay](results/inference_reliability_overlay.png)
 
 Высокую надёжность получают текстурированные области с уникальной структурой: окна и проёмы башен, кроны пальм, декор фасада. Низкую — однородный фон (небо, холст) и повторяющиеся узоры (кладка, листва внизу), где дескриптор неоднозначен.
 
@@ -227,6 +242,8 @@ x5 (1/32, 64) ── bilinear up ×4 ───────┘
 | Q3 | 0.295–0.423 | 71.1% | 1280 | 99.7% |
 | Q4 (высокая) | 0.423–0.853 | 77.6% | 1396 | 99.6% |
 
+Надёжность действительно предсказывает, сматчится ли ячейка: доля ячеек с взаимным совпадением растёт от 46% в нижнем квартиле до 78% в верхнем, а точность — от 90.9% до 99.6%. Из ~98 ошибочных матчей около 75 (три четверти) приходятся на нижний квартиль. Поэтому отбор точек по надёжности (sparse: в произведении с детектором, XFeat\*: напрямую) отсекает в первую очередь ненадёжные совпадения.
+
 ### 3.5. Semi-dense матчинг (XFeat\*) и refinement
 
 Шаги `match_xfeat_star`:
@@ -334,4 +351,3 @@ Refinement-модуль (XFeat\*) решает это только для semi-d
 | Нет эквивариантности к повороту | обычные свёртки, нет оценки ориентации | верных матчей 100% → 8.5% на 45°, ≈0% от 60° |
 | Нет субпикселя в sparse | NMS возвращает целые индексы | ошибка = субпиксельному сдвигу (до 0.75 px) |
 | Смещение refinement (находка) | центр бинов 4 при обученном нуле в бине 3 | медиана 1.10 → 0.70 px после сдвига центра |
-

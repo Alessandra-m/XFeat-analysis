@@ -80,7 +80,6 @@ def main():
         n_pairs += sum(1 for i in range(2, 7) if f"{i}.ppm" in files and f"H_1_{i}" in files
                        and "1.ppm" in files)
 
-    # summary
     def status(ok):
         return "OK  " if ok else "FAIL"
 

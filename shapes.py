@@ -82,7 +82,6 @@ def main():
     print("FPN fusion: block3 {} + up(block4 {}) + up(block5 {}) -> block_fusion {}".format(
         by_name["block3"][1], by_name["block4"][1], by_name["block5"][1], by_name["block_fusion"][1]))
 
-    # fine matcher (XFeat*) on a pair of coarse descriptors
     rec_fine = []
     handles = register_hooks(net, ["fine_matcher"], rec_fine)
     with torch.inference_mode():
@@ -94,12 +93,10 @@ def main():
     _, s_in, s_out = rec_fine[0]
     print(f"fine matcher: {s_in} -> {s_out} (reshaped to N x 8 x 8 offsets)")
 
-    # sparse outputs after detectAndCompute
     sparse = xfeat.detectAndCompute(img, top_k=TOP_K)[0]
     print(f"sparse: keypoints {tuple(sparse['keypoints'].shape)}, "
           f"descriptors {tuple(sparse['descriptors'].shape)}, scores {tuple(sparse['scores'].shape)}")
 
-    # compare with the paper
     print("\nchecks against the paper")
     channels = [net.block1[i].layer[0].out_channels for i in range(4)]
     channels += [by_name[b][1][1] for b in ["block2", "block3", "block4"]]

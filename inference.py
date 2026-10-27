@@ -68,15 +68,15 @@ def main():
     feats, kpt_logits, heatmap = reliability_map(xfeat, img_ref)
     save_reliability(
         heatmap, img_ref,
-        os.path.join(RESULTS_DIR, "stage1_reliability.png"),
-        os.path.join(RESULTS_DIR, "stage1_reliability_overlay.png"),
+        os.path.join(RESULTS_DIR, "inference_reliability.png"),
+        os.path.join(RESULTS_DIR, "inference_reliability_overlay.png"),
     )
 
     mkpts_ref, mkpts_tgt = xfeat.match_xfeat_star(img_ref, img_tgt, top_k=TOP_K)
     H, inliers = estimate_homography(mkpts_ref, mkpts_tgt)
 
     vis = draw_matches(img_ref, img_tgt, mkpts_ref[inliers], mkpts_tgt[inliers])
-    cv2.imwrite(os.path.join(RESULTS_DIR, "stage1_matches.png"), vis)
+    cv2.imwrite(os.path.join(RESULTS_DIR, "inference_matches.png"), vis)
 
 
 if __name__ == "__main__":

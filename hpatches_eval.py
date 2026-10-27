@@ -22,7 +22,6 @@ EXCLUDED_108 = ["i_contruction", "i_crownnight", "i_dc", "i_pencils", "i_whitebu
 PAPER_MHA = {"i": {3: 95.0, 5: 98.1, 7: 98.8}, "v": {3: 68.6, 5: 81.1, 7: 86.1}}
 
 
-
 def list_pairs(root, subset, max_seqs=0):
     seqs = sorted(d for d in os.listdir(root)
                   if os.path.isdir(os.path.join(root, d)) and d[:2] in ("i_", "v_"))
@@ -94,7 +93,6 @@ def make_matcher(name, top_k):
     raise ValueError(name)
 
 
-
 def reprojection_errors(pts0, pts1, H):
     proj = cv2.perspectiveTransform(pts0.reshape(-1, 1, 2).astype(np.float64), H).reshape(-1, 2)
     return np.linalg.norm(proj - pts1, axis=1)
@@ -158,7 +156,6 @@ def mha(errors, thresholds):
     return {t: float((e <= t).mean()) for t in thresholds}
 
 
-
 def mean_std(values):
     return {"mean": float(np.mean(values)), "std": float(np.std(values))}
 
@@ -220,7 +217,6 @@ def print_summary(summary, seeds):
                 for t in MHA_THR))
 
 
-
 def git_commit(path):
     if not os.path.exists(os.path.join(path, ".git")):
         return None
@@ -263,7 +259,6 @@ def to_json(obj):
     if isinstance(obj, (list, tuple)):
         return [to_json(v) for v in obj]
     return obj
-
 
 
 def parse_args():
