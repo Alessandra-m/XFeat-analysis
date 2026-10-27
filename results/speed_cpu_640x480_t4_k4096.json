@@ -1,0 +1,64 @@
+{
+ "config": {
+  "device": "cpu",
+  "width": 640,
+  "height": 480,
+  "top_k": 4096,
+  "runs": 100,
+  "warmup": 10,
+  "threads": 4,
+  "seed": 0,
+  "out": null
+ },
+ "environment": {
+  "python": "3.14.4",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "processor": "x86_64",
+  "cpu_count_logical": 12,
+  "torch_threads": 4,
+  "torch": "2.14.1+cu130",
+  "numpy": "2.5.2",
+  "device": "cpu",
+  "gpu": null,
+  "cuda": null,
+  "repo_commit": "faaa9cb9958467e57c1adf5f7559ad49542f8288",
+  "repo_dirty": false,
+  "xfeat_commit": "e92685f57f8318b18725c5c8c0bd28c7fe188d9a"
+ },
+ "resolution": {
+  "width": 640,
+  "height": 480
+ },
+ "timings_ms": {
+  "extract": {
+   "runs": 100,
+   "mean_ms": 34.845314160029375,
+   "std_ms": 1.3027648961935392,
+   "median_ms": 34.720573499726015,
+   "min_ms": 31.14965900022071,
+   "max_ms": 37.90744099933363,
+   "p95_ms": 37.27471099991817,
+   "fps_mean": 28.698263284625153
+  },
+  "match": {
+   "runs": 100,
+   "mean_ms": 46.8435474299622,
+   "std_ms": 2.3907144150164235,
+   "median_ms": 46.624449500086484,
+   "min_ms": 43.54923500068253,
+   "max_ms": 61.16031000055955,
+   "p95_ms": 49.99205689955488,
+   "fps_mean": 21.34765735868196
+  },
+  "extract_match": {
+   "runs": 100,
+   "mean_ms": 118.32318608996502,
+   "std_ms": 7.262562985294277,
+   "median_ms": 116.11953099964012,
+   "min_ms": 108.0911709996144,
+   "max_ms": 151.85810500042862,
+   "p95_ms": 131.3957373001358,
+   "fps_mean": 8.451428946814085
+  }
+ }
+}
