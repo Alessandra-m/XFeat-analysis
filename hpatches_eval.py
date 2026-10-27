@@ -15,7 +15,6 @@ MMA_THR = list(range(1, 11))
 AUC_THR = [3, 5, 10]
 MHA_THR = [3, 5, 7]
 
-# high-resolution sequences excluded in the 108-scene variant (D2-Net and later works)
 EXCLUDED_108 = ["i_contruction", "i_crownnight", "i_dc", "i_pencils", "i_whitebuilding",
                 "v_artisans", "v_astronautis", "v_talent"]
 
@@ -78,7 +77,6 @@ def make_matcher(name, top_k):
                     "matcher": "xfeat.match_xfeat (MNN, min_cossim=-1)"}
 
     if name == "orb":
-        # sanity baseline: same pipeline with a classic detector, no torch needed
         orb = cv2.ORB_create(nfeatures=top_k)
         bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
@@ -224,7 +222,6 @@ def print_summary(summary, seeds):
 
 
 def git_commit(path):
-    # a submodule has its own .git file/dir; without it git would report the parent repo
     if not os.path.exists(os.path.join(path, ".git")):
         return None
     try:
@@ -312,7 +309,6 @@ def main():
         pts0, pts1 = match_fn(img0, img1)
         t_match = time.perf_counter() - t
 
-        # matching is deterministic, only MAGSAC depends on the seed
         errs, inliers = [], []
         for seed in args.seeds:
             H_est, n_in = magsac(pts0, pts1, args.ransac_thr, args.ransac_iters, args.ransac_conf, seed)

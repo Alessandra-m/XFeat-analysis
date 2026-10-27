@@ -61,8 +61,6 @@ def parse_args():
 def main():
     args = parse_args()
 
-    # Force CPU before importing torch/XFeat: XFeat.__init__ picks cuda if torch sees it,
-    # regardless of env set later. Hiding CUDA here makes torch.cuda.is_available() False.
     if args.device == "cpu":
         os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
@@ -79,12 +77,9 @@ def main():
     cuda = args.device == "cuda"
 
     def sync():
-        # CUDA kernels are async: wait for them so the timer covers the real work
         if cuda:
             torch.cuda.synchronize()
 
-    # Two fixed VGA inputs (B, C, H, W), values 0..255 like a real frame.
-    # They stay in host memory, so on GPU the host->device copy is part of the timing.
     x0 = torch.randint(0, 256, (1, 3, args.height, args.width), dtype=torch.float32)
     x1 = torch.randint(0, 256, (1, 3, args.height, args.width), dtype=torch.float32)
 
@@ -110,7 +105,7 @@ def main():
     results = {}
     for label, fn in (("extract", run_extract), ("match", run_match),
                       ("extract_match", run_extract_match)):
-        for _ in range(args.warmup):      # warm-up: not measured
+        for _ in range(args.warmup): 
             fn()
         sync()
         times_ms = []
