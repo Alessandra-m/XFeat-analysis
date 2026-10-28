@@ -1,3 +1,10 @@
 __pycache__/
 *.py[cod]
+
+pytorch_evn/
+
 data/
+
+*.pth
+
+.DS_Store

@@ -17,14 +17,16 @@
 
 | Путь | Содержимое |
 |---|---|
-| `inference.py` | инференс, карта надёжности, матчинг |
-| `shapes.py` | размеры тензоров по веткам |
-| `decisions.py` | замеры вычислений, надёжности и refinement |
-| `limitations.py` | полутоновый вход, поворот, субпиксельная точность |
-| `paths.py` | пути к подмодулю и папке результатов |
-| `hpatches_check.py` | замеры: проверка структуры HPatches |
-| `hpatches_eval.py` | замеры: MMA, AUC, MHA на HPatches |
-| `speed_benchmark.py` | замеры: скорость extract / match / пара |
+| `analysis/inference.py` | инференс, карта надёжности, матчинг |
+| `analysis/shapes.py` | размеры тензоров по веткам |
+| `analysis/decisions.py` | замеры вычислений, надёжности и refinement |
+| `analysis/limitations.py` | полутоновый вход, поворот, субпиксельная точность |
+| `benchmark/hpatches_check.py` | замеры: проверка структуры HPatches |
+| `benchmark/hpatches_eval.py` | замеры: MMA, AUC, MHA на HPatches |
+| `benchmark/speed_benchmark.py` | замеры: скорость extract / match / пара |
+| `prune/prune_xfeat.py` | структурный L1-прунинг одной стадии backbone |
+| `prune/prune_sweep_macs.py` | снижение MACs при прунинге каждой стадии по отдельности |
+| `common/paths.py` | пути к подмодулю и папке результатов |
 | `EVAL_HPATCHES_SPEED.md` | отчёт: качество на HPatches и скорость на CPU/GPU |
 | `results/` | изображения `inference.py` и JSON с результатами замеров |
 | `third_party/accelerated_features/` | оригинальный репозиторий XFeat (submodule) |
@@ -35,7 +37,10 @@
 git clone --recurse-submodules git@github.com:Alessandra-m/XFeat-analysis.git
 cd XFeat-analysis
 pip install -r third_party/accelerated_features/requirements.txt
-python inference.py      # затем shapes.py, decisions.py, limitations.py
+# из корня как модуль (python -m <папка>.<скрипт>) или напрямую: python prune/prune_xfeat.py ...
+python -m analysis.inference      # затем analysis.shapes, analysis.decisions, analysis.limitations
+python -m prune.prune_xfeat --stage block2 --ratio 0.25
+python -m prune.prune_sweep_macs
 ```
 
 Модель: XFeat, предобученные веса `third_party/accelerated_features/weights/xfeat.pt`.
@@ -47,7 +52,7 @@ python inference.py      # затем shapes.py, decisions.py, limitations.py
 
 ## 1. Инференс на паре изображений
 
-Скрипт: [`inference.py`](inference.py).
+Скрипт: [`inference.py`](analysis/inference.py).
 
 ### Пайплайн
 
@@ -84,7 +89,7 @@ python inference.py      # затем shapes.py, decisions.py, limitations.py
 
 ## 2. Размеры тензоров по веткам
 
-Скрипт: [`shapes.py`](shapes.py). На модули вешаются `register_forward_hook`, вход 1×3×576×800.
+Скрипт: [`shapes.py`](analysis/shapes.py). На модули вешаются `register_forward_hook`, вход 1×3×576×800.
 
 ### Обозначения выходов сети
 
@@ -157,7 +162,7 @@ python inference.py      # затем shapes.py, decisions.py, limitations.py
 
 ## 3. Ключевые архитектурные решения
 
-Скрипт с замерами: [`decisions.py`](decisions.py). Он считает вычисления по стадиям backbone, а также точность матчинга и роль надёжности на паре «изображение → его копия под известной гомографией» (масштаб и перспектива, без поворота). Такая пара даёт точную ground truth для ошибки в пикселях.
+Скрипт с замерами: [`decisions.py`](analysis/decisions.py). Он считает вычисления по стадиям backbone, а также точность матчинга и роль надёжности на паре «изображение → его копия под известной гомографией» (масштаб и перспектива, без поворота). Такая пара даёт точную ground truth для ошибки в пикселях.
 
 Как обучаются ветки (`modules/training/losses.py`, `train.py`):
 
@@ -272,7 +277,7 @@ Refinement уменьшает медианную ошибку в 2.2 раза и
 
 ## 4. Ограничения архитектуры
 
-Скрипт: [`limitations.py`](limitations.py). Все тесты сделаны на синтетических парах с известным преобразованием, поэтому ошибку можно измерить точно.
+Скрипт: [`limitations.py`](analysis/limitations.py). Все тесты сделаны на синтетических парах с известным преобразованием, поэтому ошибку можно измерить точно.
 
 ### 4.1. Полутоновый вход
 

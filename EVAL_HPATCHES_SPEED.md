@@ -31,17 +31,17 @@ HPatches sequences: 116 сцен, в каждой 1 эталон + 5 изобр�
 Итого 116 сцен × 5 пар = 580 пар. Вариант «108» исключает 8 высокоразрешённых сцен
 (как в D2-Net и поздних работах) → 540 пар.
 
-Проверка структуры датасета — скрипт `hpatches_check.py` (число сцен, комплектность файлов,
+Проверка структуры датасета — скрипт `benchmark/hpatches_check.py` (число сцен, комплектность файлов,
 валидность каждой гомографии: форма 3×3, конечность, невырожденность):
 
 ```bash
-python hpatches_check.py <путь>/hpatches-sequences-release --read-images
+python -m benchmark.hpatches_check <путь>/hpatches-sequences-release --read-images
 # ожидается: RESULT: dataset structure is OK (116 сцен, 57 i_, 59 v_, 580 пар)
 ```
 
 ### Протокол оценки
 
-Скрипт `hpatches_eval.py` — одна команда на весь прогон. Метрики:
+Скрипт `benchmark/hpatches_eval.py` — одна команда на весь прогон. Метрики:
 
 - **MMA** (mean matching accuracy) — доля матчей с ошибкой репроекции ≤ t px (t = 1..10).
   Проекция точек эталона истинной `H_gt` сравнивается с тем, куда их сматчила XFeat.
@@ -58,7 +58,7 @@ MAGSAC стохастичен, поэтому оценка гомографии 
 детерминирован. Базовый прогон:
 
 ```bash
-python hpatches_eval.py --matcher xfeat --subset all --resize 480 \
+python -m benchmark.hpatches_eval --matcher xfeat --subset all --resize 480 \
     --top-k 4096 --ransac-thr 3.0 --seeds 0 1 2 3 4
 ```
 
@@ -120,14 +120,14 @@ python hpatches_eval.py --matcher xfeat --subset all --resize 480 \
 
 ## 3. Скорость инференса (целевой компьютер, VGA 640×480)
 
-Скрипт `speed_benchmark.py`: фиксированный вход 640×480, warm-up 10 прогонов, 100 замеров,
+Скрипт `benchmark/speed_benchmark.py`: фиксированный вход 640×480, warm-up 10 прогонов, 100 замеров,
 mean ± std. Раздельно: `extract` (только `detectAndCompute`, до матчинга), `match`
 (только MNN), `extract_match` (полный `match_xfeat` на паре). top_k = 4096.
 
 ```bash
-CUDA_VISIBLE_DEVICES="" python speed_benchmark.py --threads 1 --runs 100
-CUDA_VISIBLE_DEVICES="" python speed_benchmark.py --threads 4 --runs 100
-python speed_benchmark.py --device cuda --runs 100
+CUDA_VISIBLE_DEVICES="" python -m benchmark.speed_benchmark --threads 1 --runs 100
+CUDA_VISIBLE_DEVICES="" python -m benchmark.speed_benchmark --threads 4 --runs 100
+python -m benchmark.speed_benchmark --device cuda --runs 100
 ```
 
 | Устройство | потоки | extract, мс | FPS (extract) | match, мс | extract+match, мс | FPS (пара) |
@@ -196,7 +196,7 @@ python speed_benchmark.py --device cuda --runs 100
 
 | Задание | Результат |
 |---|---|
-| 1. Подготовка HPatches + протокол | `hpatches_check.py` (OK, 116/57/59/580), `hpatches_eval.py` — одна команда |
+| 1. Подготовка HPatches + протокол | `benchmark/hpatches_check.py` (OK, 116/57/59/580), `benchmark/hpatches_eval.py` — одна команда |
 | 2. Прогон XFeat sparse, метрики | MMA@3 all 64.5%; MHA@3/5/7 all 86.7/92.1/94.0% |
 | 3. Замер скорости (VGA, ≥100 прогонов) | CPU 4 потока: 28.7 FPS extract; GPU: 245 FPS; раздельно extract / match / пара |
 | 4. Сравнение с авторами | MHA(i) совпал (≤1.1 п.п.), MHA(v) выше на 3–9 п.п.; скорость 28.7 FPS ≈ 27.1 FPS статьи |

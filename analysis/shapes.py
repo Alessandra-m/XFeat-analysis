@@ -1,10 +1,12 @@
 import os
+import sys
 
 import cv2
 import torch
 import torch.nn.functional as F
 
-from paths import XFEAT_DIR
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
+from common.paths import XFEAT_DIR
 from modules.xfeat import XFeat
 
 REF_PATH = os.path.join(XFEAT_DIR, "assets", "ref.png")

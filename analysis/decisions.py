@@ -1,11 +1,13 @@
 import os
+import sys
 
 import cv2
 import numpy as np
 import torch
 import torch.nn.functional as F
 
-from paths import XFEAT_DIR
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from common.paths import XFEAT_DIR
 from modules.model import BasicLayer
 from modules.xfeat import XFeat
 

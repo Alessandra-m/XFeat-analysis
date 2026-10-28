@@ -1,11 +1,13 @@
 import os
+import sys
 
 import cv2
 import numpy as np
 import torch
 
-from paths import XFEAT_DIR
-from decisions import H_GT, coarse_and_refined
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
+from common.paths import XFEAT_DIR
+from analysis.decisions import H_GT, coarse_and_refined
 from modules.xfeat import XFeat
 
 REF_PATH = os.path.join(XFEAT_DIR, "assets", "ref.png")

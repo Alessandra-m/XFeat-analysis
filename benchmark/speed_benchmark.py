@@ -8,7 +8,8 @@ import time
 
 import numpy as np
 
-from paths import RESULTS_DIR, XFEAT_DIR, HERE
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
+from common.paths import RESULTS_DIR, XFEAT_DIR, HERE
 
 
 def git_commit(path):

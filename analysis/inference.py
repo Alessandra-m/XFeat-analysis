@@ -1,10 +1,12 @@
 import os
+import sys
 
 import cv2
 import numpy as np
 import torch
 
-from paths import RESULTS_DIR, XFEAT_DIR
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  
+from common.paths import RESULTS_DIR, XFEAT_DIR
 from modules.xfeat import XFeat
 
 REF_PATH = os.path.join(XFEAT_DIR, "assets", "ref.png")
