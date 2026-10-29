@@ -26,6 +26,7 @@ def load_csv(path):
                     r[k] = float(v)
                 except (ValueError, TypeError):
                     pass
+        r["ratio_pct"] = 100 * r["ratio"]   # share of channels removed in the stage, %
     return rows
 
 
@@ -48,17 +49,26 @@ def stages_in(rows):
     return [s for s in STAGE_COLORS if any(r["stage"] == s for r in rows)]
 
 
+RATIO_LABEL = "Удалено каналов в стадии, %"
+
+
+def ratio_ticks(ax, rows):
+    ax.set_xticks([0] + sorted({r["ratio_pct"] for r in rows if r["stage"] != "baseline"}))
+
+
 def plot_quality(rows, base, out):
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
     for ax, ycol, name in [(axes[0], "mma_all_3", "MMA@3"),
-                           (axes[1], "mha_all_3", "MHA@3")]:
+                           (axes[1], "auc_all_3", "AUC@3"),
+                           (axes[2], "mha_all_3", "MHA@3")]:
         for s in stages_in(rows):
-            x, y = stage_series(rows, s, "macs_off_pct", ycol, base)
+            x, y = stage_series(rows, s, "ratio_pct", ycol, base)
             ax.plot(x, y, marker="o", color=STAGE_COLORS[s], label=s, lw=1.8, ms=5)
         ax.axhline(base[ycol], color="#888", ls="--", lw=1, label="baseline")
-        ax.set_xlabel("Срезано MACs backbone, %")
+        ratio_ticks(ax, rows)
+        ax.set_xlabel(RATIO_LABEL)
         ax.set_ylabel(name + ", %")
-        ax.set_title(name + " vs срезано MACs")
+        ax.set_title(name + " vs доля удалённых каналов")
         ax.grid(alpha=0.3)
         ax.legend(fontsize=8)
     fig.tight_layout()
@@ -73,9 +83,9 @@ def plot_speed(rows, base, out):
         scol = ycol + "_std"   # spread over speed repeats; absent in old CSVs
         has_std = scol in base
         for s in stages_in(rows):
-            x, y = stage_series(rows, s, "macs_off_pct", ycol, base)
+            x, y = stage_series(rows, s, "ratio_pct", ycol, base)
             if has_std:
-                _, e = stage_series(rows, s, "macs_off_pct", scol, base)
+                _, e = stage_series(rows, s, "ratio_pct", scol, base)
                 ax.errorbar(x, y, yerr=e, marker="o", color=STAGE_COLORS[s], label=s,
                             lw=1.8, ms=5, capsize=3)
             else:
@@ -83,9 +93,10 @@ def plot_speed(rows, base, out):
         ax.axhline(base[ycol], color="#888", ls="--", lw=1, label="baseline")
         if has_std:
             ax.axhspan(base[ycol] - base[scol], base[ycol] + base[scol], color="#888", alpha=0.15)
-        ax.set_xlabel("Срезано MACs backbone, %")
+        ratio_ticks(ax, rows)
+        ax.set_xlabel(RATIO_LABEL)
         ax.set_ylabel("FPS (CPU), медиана по повторам" if has_std else "FPS (CPU)")
-        ax.set_title(name + " vs срезано MACs")
+        ax.set_title(name + " vs доля удалённых каналов")
         ax.grid(alpha=0.3)
         ax.legend(fontsize=8)
     fig.tight_layout()
@@ -101,7 +112,7 @@ def plot_tradeoff(rows, base, out, ycol="mma_all_3"):
         ax.plot([p[0] for p in pts], [p[1] for p in pts],
                 marker="o", color=STAGE_COLORS[s], label=s, lw=1.8, ms=6)
     ax.axhline(0, color="#888", lw=1)
-    ax.set_xlabel("Срезано MACs backbone, %")
+    ax.set_xlabel("Срезано MACs сети (backbone + головы), %")
     ax.set_ylabel("Потеря MMA@3 относительно baseline, п.п.")
     ax.set_title("Сделка: сколько качества теряем за процент MACs")
     ax.grid(alpha=0.3)
