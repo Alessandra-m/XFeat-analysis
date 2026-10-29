@@ -6,7 +6,7 @@ import os
 import time
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.paths import XFEAT_DIR, PRUNE_DIR
 
 import numpy as np
@@ -18,7 +18,6 @@ import benchmark.hpatches_eval as he
 from prune_xfeat import load_model, ignored_layers, stage_conv_layers, STAGES
 import torch_pruning as tp
 import torch.nn as nn
-
 
 
 def build_pruned_net(stage, ratio, device, example):
@@ -54,8 +53,6 @@ def make_xfeat_with_net(net, top_k, device):
     return xf
 
 
-# ----- quality: reuse hpatches_eval metric pipeline on the pruned matcher -----
-
 def eval_quality(xf, data_dir, subset, resize, top_k, ransac_thr, ransac_iters, ransac_conf, seeds):
     pairs = he.list_pairs(data_dir, subset, 0)
 
@@ -79,8 +76,6 @@ def eval_quality(xf, data_dir, subset, resize, top_k, ransac_thr, ransac_iters, 
                         "n_inliers": inl, "match_time_s": 0.0})
     return he.summarize(records, seeds)
 
-
-# ----- speed: fixed VGA, CPU, fixed threads; extract / extract+match, mean/std -----
 
 def eval_speed(net, width, height, top_k, threads, runs, warmup, seed):
     prev = torch.get_num_threads()
@@ -148,7 +143,6 @@ def main():
     device = torch.device(args.device if (args.device == "cpu" or torch.cuda.is_available()) else "cpu")
     example = torch.randn(1, 3, args.vga_h, args.vga_w, device=device)
 
-    # variants: baseline first, then the grid
     variants = [(None, 0.0)] + [(s, r) for s in args.stages for r in args.ratios]
 
     fields = ["stage", "ratio", "macs_off_pct",
@@ -168,7 +162,6 @@ def main():
             w.writeheader()
             w.writerows(rows)
 
-    # ----- pass 1: build + quality for every variant -----
     for stage, ratio in variants:
         tag = "baseline" if stage is None else f"{stage}@{ratio}"
         print(f"\n=== {tag} ===")
@@ -204,8 +197,8 @@ def main():
             torch.save(net, os.path.join(PRUNE_DIR, f"{stage}_{int(ratio*100)}.pth"))
         write_csv()
 
-    # ----- pass 2: speed in rounds; every round times all variants in a shuffled order,
-    # so machine drift (thermal, background load) hits all variants alike, not just one -----
+    # speed in rounds; every round times all variants in a shuffled order,
+    # so machine drift (thermal, background load) hits all variants alike, not just one
     times = {k: [[] for _ in variants] for k in ("extract", "extract_match")}
     for rep in range(args.speed_repeats):
         order = np.random.default_rng(rep).permutation(len(variants))

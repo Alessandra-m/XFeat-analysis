@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.paths import XFEAT_DIR, PRUNE_DIR
 
 import numpy as np
@@ -11,7 +11,7 @@ import torch.nn as nn
 import torch_pruning as tp
 
 from prune_xfeat import load_model, ignored_layers, stage_conv_layers
-import prune_grid_eval as pg   # eval_quality, eval_speed, make_xfeat_with_net
+import prune_grid_eval as pg
 import benchmark.hpatches_eval as he
 
 
@@ -45,10 +45,9 @@ def make_pruner(model, example, importance, ratio, ign):
                pruning_ratio=ratio, ignored_layers=ign, round_to=1)
 
 
-
 def build_pruned(stage, ratio, crit, device, example, seed=0,
                  taylor_batches=4, vga=(640, 480)):
-    torch.manual_seed(seed)                    
+    torch.manual_seed(seed)
     model = load_model(device)
     target = set(stage_conv_layers(model, stage))
     ign = ignored_layers(model)
@@ -69,7 +68,7 @@ def build_pruned(stage, ratio, crit, device, example, seed=0,
             x = torch.randint(0, 256, (1, 3, vga[1], vga[0]),
                               dtype=torch.float32, device=device)
             feats, kpts, heat = model(x)
-            loss = feats.pow(2).mean()        
+            loss = feats.pow(2).mean()
             loss.backward()
 
     for group in pruner.step(interactive=True):
@@ -159,7 +158,6 @@ def main():
             std = a.std(axis=0)                 # spread across seeds (only meaningful for random)
             note = f"avg of {len(seeds)} seeds" if crit == "random" else (
                 "surrogate-loss proxy" if crit == "taylor" else "")
-            # show +-std on the quality numbers when we averaged several seeds
             if len(seeds) > 1:
                 print(f"  {crit:7s} MACs-{macs_off:4.1f}%  "
                       f"MMA@3 {mean[0]:5.1f}+-{std[0]:.1f}  MMA_v {mean[1]:5.1f}+-{std[1]:.1f}  "

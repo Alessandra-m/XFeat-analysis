@@ -3,8 +3,8 @@ import copy
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
-from common.paths import XFEAT_DIR 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from common.paths import XFEAT_DIR
 
 import torch
 import torch.nn as nn
@@ -46,7 +46,6 @@ def prune_one_stage(model, stage, ratio, example):
     changed = [f"{n.split('.')[-3]}:{before[n][1]}->{after[n][1]}"
                for n in before if before[n][1] != after[n][1]]
 
-    # sanity: interface intact
     model.eval()
     with torch.inference_mode():
         feats, kpts, heat = model(example)
@@ -69,7 +68,6 @@ def main():
     device = torch.device(args.device if (args.device == "cpu" or torch.cuda.is_available()) else "cpu")
     example = torch.randn(1, 3, args.height, args.width, device=device)
 
-    # baseline MACs (unpruned) for reference
     base = load_model(device)
     base_macs, base_params = tp.utils.count_ops_and_params(base, example)
     print(f"baseline: {base_macs/1e9:.3f} GMACs, {base_params/1e3:.1f}k params "

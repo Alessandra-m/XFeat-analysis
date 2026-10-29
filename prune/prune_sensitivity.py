@@ -5,14 +5,14 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from common.paths import PRUNE_DIR  
+from common.paths import PRUNE_DIR
 
-import numpy as np                
-import torch                       
+import numpy as np
+import torch
 
-import benchmark.hpatches_eval as he   
-import prune_grid_eval as pg         
-from prune_xfeat import STAGES       
+import benchmark.hpatches_eval as he
+import prune_grid_eval as pg
+from prune_xfeat import STAGES
 
 
 def parse_args():
@@ -81,7 +81,6 @@ def main():
             w.writeheader()
             w.writerows(rows)
 
-    # baseline anchor
     print("=== baseline ===")
     base = eval_point(None, 0.0, args, device, example)
     base_mma = base["mma_all_3"]
@@ -89,7 +88,6 @@ def main():
     print(f"  MMA@3 {base_mma}  MHA@3 {base['mha_all_3']}")
     write()
 
-    # fine grid per stage
     for stage in args.stages:
         print(f"\n########## {stage} ##########")
         for ratio in args.ratios:
@@ -105,7 +103,7 @@ def main():
                   f"inl {r['inliers_all']:5.0f}{sp}  [{time.time()-t0:.0f}s]{flag}")
             write()
 
-    # ---- sensitivity map: per-stage safe budget (largest ratio within safe-drop) ----
+    # safe budget per stage: largest ratio whose MMA@3 drop stays within --safe-drop
     print(f"\n=== sensitivity map (MMA@3 drop <= {args.safe_drop} p.p. vs baseline {base_mma}) ===")
     print(f"{'stage':<8}{'safe ratio':>11}{'MACs off':>10}{'cliff ratio':>12}")
     for stage in args.stages:

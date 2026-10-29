@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import torch
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.paths import RESULTS_DIR, XFEAT_DIR
 from modules.xfeat import XFeat
 

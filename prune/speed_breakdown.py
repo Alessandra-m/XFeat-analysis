@@ -3,17 +3,17 @@ import os
 import sys
 import time
 
-os.environ["CUDA_VISIBLE_DEVICES"] = ""  
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from common.paths import XFEAT_DIR 
+from common.paths import XFEAT_DIR
 
-import numpy as np              
-import torch                    
+import numpy as np
+import torch
 
-import prune_grid_eval as pg       
-import prune_nonuniform as pn      
-from prune_xfeat import load_model  
+import prune_grid_eval as pg
+import prune_nonuniform as pn
+from prune_xfeat import load_model
 
 STEPS = ("net", "extract", "match", "pair")
 
@@ -56,6 +56,25 @@ def profile_extract(xf, x0, top_k, runs, rows):
     print(p.key_averages().table(sort_by="self_cpu_time_total", row_limit=rows))
 
 
+def compare_steps(xfs, rounds, runs, warmup, top_k, w, h):
+    """Per-step pair time (instrumented match_xfeat from analysis/profile.py) on the real test pair:
+    shows where the pair saving comes from inside the pipeline."""
+    import analysis.profile as pf
+    x0, x1 = pf.load_pair(w, h, "cpu")
+    acc = {k: {} for k in xfs}
+    for r in range(rounds):
+        for k in (list(xfs) if r % 2 == 0 else list(xfs)[::-1]):
+            res = pf.time_pipeline(pf.sparse_pair, xfs[k], x0, x1, top_k, lambda: None, runs, warmup)
+            for step, v in res["steps_ms"].items():
+                acc[k].setdefault(step, []).append(v)
+            acc[k].setdefault("pair", []).append(res["total_ms"])
+    print(f"\nper-step sparse pair on ref/tgt, median of {rounds} rounds x {runs} runs, ms")
+    print(f"{'step':<12}{'baseline':>10}{'pruned':>10}{'saved':>8}")
+    for step in acc["baseline"]:
+        b, p = np.median(acc["baseline"][step]), np.median(acc["pruned"][step])
+        print(f"{step:<12}{b:>10.2f}{p:>10.2f}{b - p:>8.2f}")
+
+
 def parse_args():
     p = argparse.ArgumentParser(description="CPU time breakdown of the pair: net / extract / match / pair, "
                                             "baseline vs non-uniform pruned net")
@@ -70,6 +89,8 @@ def parse_args():
     p.add_argument("--vga-w", type=int, default=640)
     p.add_argument("--vga-h", type=int, default=480)
     p.add_argument("--profile", action="store_true", help="also profile detectAndCompute by operator")
+    p.add_argument("--steps", action="store_true",
+                   help="also compare the pair step by step (net / NMS / interpolation / MNN) on the test pair")
     return p.parse_args()
 
 
@@ -88,7 +109,6 @@ def main():
     x1 = torch.randint(0, 256, (1, 3, args.vga_h, args.vga_w), dtype=torch.float32)
     steps = {k: make_steps(xf, x0, x1, args.top_k) for k, xf in xfs.items()}
 
-    # alternate variant order every round so drift (thermal, background load) hits both alike
     times = {k: {s: [] for s in STEPS} for k in steps}
     for r in range(args.rounds):
         order = list(steps) if r % 2 == 0 else list(steps)[::-1]
@@ -126,6 +146,8 @@ def main():
 
     if args.profile:
         profile_extract(xfs["baseline"], x0, args.top_k, 30, 12)
+    if args.steps:
+        compare_steps(xfs, 6, args.runs, args.warmup, args.top_k, args.vga_w, args.vga_h)
 
 
 if __name__ == "__main__":

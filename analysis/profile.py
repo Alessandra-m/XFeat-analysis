@@ -21,7 +21,6 @@ from modules.interpolator import InterpolateSparse2d
 REF_PATH = os.path.join(XFEAT_DIR, "assets", "ref.png")
 TGT_PATH = os.path.join(XFEAT_DIR, "assets", "tgt.png")
 
-# top-level modules of XFeatModel, in data-flow order
 BRANCHES = [("skip1", "skip1 (AvgPool + 1x1)"),
             ("block1", "block1 (1/1 -> 1/4)"),
             ("block2", "block2 (1/4)"),
@@ -33,7 +32,6 @@ BRANCHES = [("skip1", "skip1 (AvgPool + 1x1)"),
             ("keypoint_head", "keypoint head")]
 RESOLUTIONS = [(640, 480), (800, 600), (1024, 768), (1280, 720)]
 
-# pipeline steps -> cost groups used in the summary and the plot
 GROUPS = {"net": "сеть",
           "preprocess": "постобработка", "heatmap": "постобработка", "nms": "постобработка",
           "scores_topk": "постобработка", "desc_interp": "постобработка",
@@ -42,8 +40,6 @@ GROUPS = {"net": "сеть",
           "refine_mlp": "refinement", "refine_post": "refinement"}
 GROUP_ORDER = ["сеть", "постобработка", "матчинг MNN", "refinement"]
 
-
-# ----- MACs and parameters -----
 
 def layer_macs(module, inputs, output):
     if isinstance(module, nn.Conv2d):
@@ -95,8 +91,6 @@ def dualscale_hw(w, h, scales=(0.6, 1.3)):
         out.append(net_input_hw(x.shape[-1], x.shape[-2]))
     return out
 
-
-# ----- instrumented copies of the XFeat pipelines -----
 
 class Marks:
     """Accumulates wall time per step; sync() makes CUDA timings honest."""
@@ -216,8 +210,6 @@ def star_pair(xf, x0, x1, top_k, tm, fine_conf=0.25):
     return res, {"refined_in": int(len(idx0))}
 
 
-# ----- timing -----
-
 def time_pipeline(fn, xf, x0, x1, top_k, sync, runs, warmup):
     with torch.inference_mode():
         for _ in range(warmup):
@@ -310,8 +302,6 @@ def group_ms(steps):
     return g
 
 
-# ----- report -----
-
 def parse_args():
     p = argparse.ArgumentParser(description="XFeat cost profile: MACs/params per branch, CPU/GPU time split")
     p.add_argument("--devices", nargs="+", default=["cpu", "cuda"], choices=["cpu", "cuda"])
@@ -321,8 +311,6 @@ def parse_args():
     p.add_argument("--top-k", type=int, default=4096)
     p.add_argument("--runs", type=int, default=50)
     p.add_argument("--warmup", type=int, default=10)
-    p.add_argument("--elasticity", type=float, default=0.31,
-                   help="measured share of a MACs cut that turns into net time (11%% / 35.5%%, Part IV 7.3)")
     p.add_argument("--plot", action="store_true", help="save results/profile_costs.png")
     return p.parse_args()
 
@@ -332,7 +320,6 @@ def main():
     torch.set_num_threads(args.threads)
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
-    # ---- 1. MACs and params per branch, typical resolutions ----
     net = make_xfeat("cpu", args.top_k).net
     per_match = fine_matcher_macs_per_match(net)
     params = {n: n_params(getattr(net, n)) for n, _ in BRANCHES}
@@ -381,7 +368,6 @@ def main():
           f"XFeat* net at {w1}x{h1} + {w2}x{h2} = {star_macs/1e9:.3f} GMACs "
           f"({star_macs/vga_total:.2f}x sparse)")
 
-    # ---- 2. time split, per device ----
     report = {"config": vars(args), "macs_vga": vga, "params": params,
               "fine_matcher_macs_per_match": per_match, "devices": {}}
     for device in args.devices:
@@ -423,9 +409,7 @@ def main():
                 print(f"    {step:<12}{v:>8.2f} ms  {100*v/tot:5.1f}%   [{GROUPS[step]}]")
             print("  groups: " + " | ".join(f"{k} {g[k]:.1f} ms ({100*g[k]/tot:.0f}%)" for k in GROUP_ORDER))
 
-        # ---- 3. ceiling of structural pruning ----
-        print(f"\nceiling of pruning on {tag} (pair time saved if a branch became free; "
-              f"realistic = MACs cut x elasticity {args.elasticity})")
+        print(f"\nceiling of pruning on {tag} (pair time saved if a branch became free)")
         print(f"  {'pruned part':<34}{'sparse ms':>10}{'%pair':>7}{'XFeat* ms':>11}{'%pair':>7}")
         sp_tot, st_tot = sum(sp["steps_ms"].values()), sum(st["steps_ms"].values())
         net_sp, net_st = sp["steps_ms"]["net"], st["steps_ms"]["net"]
@@ -437,9 +421,6 @@ def main():
             print(f"  {label:<34}{a:>10.1f}{100*a/sp_tot:>6.1f}%{b:>11.1f}{100*b/st_tot:>6.1f}%")
         mlp = st["steps_ms"]["refine_mlp"]
         print(f"  {'fine_matcher (refinement MLP)':<34}{'-':>10}{'-':>7}{mlp:>11.1f}{100*mlp/st_tot:>6.1f}%")
-        r = args.elasticity * 0.355
-        print(f"  realistic, -35.5% MACs of the CNN: sparse {net_sp*r:.1f} ms ({100*net_sp*r/sp_tot:.1f}%), "
-              f"XFeat* {net_st*r:.1f} ms ({100*net_st*r/st_tot:.1f}%)")
 
     out = os.path.join(RESULTS_DIR, f"profile_{args.width}x{args.height}_k{args.top_k}.json")
     with open(out, "w") as f:
@@ -450,10 +431,8 @@ def main():
         plot_costs(report, os.path.join(RESULTS_DIR, "profile_costs.png"))
 
 
-# ----- plot -----
-
 SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e6e5e0"
-SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]   # categorical slots 1-4, fixed order
+SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]
 
 
 def plot_costs(report, out):
@@ -484,7 +463,6 @@ def plot_costs(report, out):
         ax.grid(axis="x", color=GRID, lw=0.8)
         ax.set_axisbelow(True)
 
-    # left: share of MACs / params / CPU time per branch of the CNN
     y = np.arange(len(names))[::-1]
     hgt = 0.8 / len(series)
     for i, (lab, vals) in enumerate(series):
@@ -499,7 +477,6 @@ def plot_costs(report, out):
     ax1.set_title("CNN по веткам: MACs, параметры и время сети (VGA)", color=INK, fontsize=11, loc="left")
     ax1.legend(frameon=False, fontsize=9, loc="lower right", labelcolor=INK)
 
-    # right: pair time split, % of the pair, CPU and GPU
     bars = []
     for dev in ("cpu", "cuda"):
         if dev not in report["devices"]:
@@ -521,7 +498,7 @@ def plot_costs(report, out):
             ax2.barh(yv, w, left=left, height=0.62, color=SERIES[i], edgecolor=SURFACE, linewidth=2,
                      label=None if k in seen else k)
             seen.add(k)
-            ink = "white" if i == 0 else INK          # dark ink on the light fills
+            ink = "white" if i == 0 else INK
             if w >= 7:
                 ax2.text(left + w / 2, yv, f"{g[k]:.1f} мс\n{w:.0f}%", ha="center", va="center",
                          fontsize=8, color=ink)

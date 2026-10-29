@@ -2,7 +2,7 @@ import argparse
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.paths import XFEAT_DIR
 
 import torch
@@ -60,10 +60,8 @@ def main():
 
     example = torch.randn(1, 3, args.height, args.width, device=device)
 
-    # L1 (magnitude, p=1) importance -> structural channel pruning
     importance = tp.importance.MagnitudeImportance(p=1)
 
-    # Prune ONLY the chosen stage: restrict the target layers to that block's convs.
     target_convs = set(stage_conv_layers(model, args.stage))
     ign = ignored_layers(model)
     # also ignore every conv that is NOT in the target stage, so only this stage is cut
@@ -80,7 +78,6 @@ def main():
         round_to=1,
     )
 
-    # record conv shapes of the target stage BEFORE pruning (for the before/after table)
     prefix = args.stage + "."
     before = {name: (m.in_channels, m.out_channels)
               for name, m in model.named_modules()
@@ -89,8 +86,6 @@ def main():
     base_macs, base_params = tp.utils.count_ops_and_params(model, example)
 
     # interactive=True yields each coupled group; we prune it right away in the SAME pass.
-    # Do NOT also call pruner.step() afterwards -- that double-counts the iterative budget
-    # and triggers "Pruning exceed the maximum iterative steps, no pruning will be performed".
     n_groups = 0
     for group in pruner.step(interactive=True):
         if args.verbose:

@@ -4,10 +4,10 @@ import os
 import sys
 
 import matplotlib
-matplotlib.use("Agg")         
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common.paths import PRUNE_DIR
 
 
@@ -15,18 +15,18 @@ STAGE_COLORS = {"block1": "#D85A30", "block2": "#BA7517", "block3": "#534AB7",
                 "block4": "#1D9E75", "block5": "#185FA5"}
 
 
-def load_csv(path):
+def load_csv(path, stage_col="stage"):
     with open(path) as f:
         rows = list(csv.DictReader(f))
-    # numbers come back as strings -> cast the columns we use
     for r in rows:
         for k, v in r.items():
-            if k not in ("stage",):
+            if k not in (stage_col, "kind"):
                 try:
                     r[k] = float(v)
                 except (ValueError, TypeError):
                     pass
-        r["ratio_pct"] = 100 * r["ratio"]   # share of channels removed in the stage, %
+        if "ratio" in r:
+            r["ratio_pct"] = 100 * r["ratio"]
     return rows
 
 
@@ -76,8 +76,23 @@ def plot_quality(rows, base, out):
     print("saved", out)
 
 
-def plot_speed(rows, base, out):
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+def net_speed_rows(path):
+    """Grid rows of prune_net_speed.csv (net forward only), in the stage/ratio form of the grid CSV."""
+    if not os.path.exists(path):
+        return None
+    out = []
+    for r in load_csv(path, stage_col="variant"):
+        if r["kind"] == "baseline":
+            out.append({**r, "stage": "baseline", "ratio": 0.0, "ratio_pct": 0.0})
+        elif r["kind"] == "grid":
+            stage, ratio = r["variant"].split("@")
+            out.append({**r, "stage": stage, "ratio": float(ratio), "ratio_pct": 100 * float(ratio)})
+    return out
+
+
+def plot_speed(rows, base, out, net_rows=None):
+    n = 3 if net_rows else 2
+    fig, axes = plt.subplots(1, n, figsize=(6.5 * n, 5))
     for ax, ycol, name in [(axes[0], "cpu_extract_fps", "Extract FPS"),
                            (axes[1], "cpu_match_fps", "Extract+match FPS")]:
         scol = ycol + "_std"   # spread over speed repeats; absent in old CSVs
@@ -97,6 +112,21 @@ def plot_speed(rows, base, out):
         ax.set_xlabel(RATIO_LABEL)
         ax.set_ylabel("FPS (CPU), медиана по повторам" if has_std else "FPS (CPU)")
         ax.set_title(name + " vs доля удалённых каналов")
+        ax.grid(alpha=0.3)
+        ax.legend(fontsize=8)
+    if net_rows:
+        ax, nbase = axes[2], baseline(net_rows)
+        for s in stages_in(net_rows):
+            x, y = stage_series(net_rows, s, "ratio_pct", "cpu_net_ms", nbase)
+            _, e = stage_series(net_rows, s, "ratio_pct", "cpu_net_ms_std", nbase)
+            ax.errorbar(x, y, yerr=e, marker="o", color=STAGE_COLORS[s], label=s, lw=1.8, ms=5, capsize=3)
+        ax.axhline(nbase["cpu_net_ms"], color="#888", ls="--", lw=1, label="baseline")
+        ax.axhspan(nbase["cpu_net_ms"] - nbase["cpu_net_ms_std"], nbase["cpu_net_ms"] + nbase["cpu_net_ms_std"],
+                   color="#888", alpha=0.15)
+        ratio_ticks(ax, rows)
+        ax.set_xlabel(RATIO_LABEL)
+        ax.set_ylabel("время прямого прохода сети, мс (CPU, 4 ядра)")
+        ax.set_title("Только сеть vs доля удалённых каналов")
         ax.grid(alpha=0.3)
         ax.legend(fontsize=8)
     fig.tight_layout()
@@ -125,6 +155,8 @@ def plot_tradeoff(rows, base, out, ycol="mma_all_3"):
 def main():
     ap = argparse.ArgumentParser(description="Plot pruning-grid curves from the CSV")
     ap.add_argument("--csv", default=os.path.join(PRUNE_DIR, "prune_grid.csv"))
+    ap.add_argument("--net-csv", default=os.path.join(PRUNE_DIR, "prune_net_speed.csv"),
+                    help="net-only timings from prune_net_speed.py; third speed panel if present")
     ap.add_argument("--outdir", default=PRUNE_DIR)
     args = ap.parse_args()
 
@@ -133,7 +165,7 @@ def main():
     os.makedirs(args.outdir, exist_ok=True)
 
     plot_quality(rows, base, os.path.join(args.outdir, "prune_quality.png"))
-    plot_speed(rows, base, os.path.join(args.outdir, "prune_speed.png"))
+    plot_speed(rows, base, os.path.join(args.outdir, "prune_speed.png"), net_speed_rows(args.net_csv))
     plot_tradeoff(rows, base, os.path.join(args.outdir, "prune_tradeoff.png"))
 
 
