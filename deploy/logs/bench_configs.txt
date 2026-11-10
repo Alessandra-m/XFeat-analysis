@@ -1,0 +1,80 @@
+== xfeat_fp16 core_mask=1
+total weight size: 1407552, total internal size: 21811200
+total dma used size: 23822336
+Avg Time 22.44ms, Avg FPS = 44.560
+== xfeat_fp16 core_mask=7
+total weight size: 1407552, total internal size: 21811200
+total dma used size: 23822336
+Avg Time 12.08ms, Avg FPS = 82.802
+== xfeat_i8_mmse core_mask=1
+total weight size: 752704, total internal size: 20582400
+total dma used size: 21864448
+Avg Time 15.96ms, Avg FPS = 62.639
+== xfeat_i8_mmse core_mask=7
+total weight size: 752704, total internal size: 20582400
+total dma used size: 21864448
+Avg Time 8.67ms, Avg FPS = 115.315
+== config_A_fp16 core_mask=1
+total weight size: 882496, total internal size: 21811200
+total dma used size: 23298048
+Avg Time 22.24ms, Avg FPS = 44.972
+== config_A_fp16 core_mask=7
+total weight size: 882496, total internal size: 21811200
+total dma used size: 23298048
+Avg Time 12.00ms, Avg FPS = 83.344
+== config_A_i8_mmse core_mask=1
+total weight size: 489024, total internal size: 20582400
+total dma used size: 21602304
+Avg Time 15.87ms, Avg FPS = 63.030
+== config_A_i8_mmse core_mask=7
+total weight size: 489024, total internal size: 20582400
+total dma used size: 21602304
+Avg Time 8.63ms, Avg FPS = 115.858
+== config_B_fp16 core_mask=1
+total weight size: 875584, total internal size: 21811200
+total dma used size: 23289856
+Avg Time 22.23ms, Avg FPS = 44.978
+== config_B_fp16 core_mask=7
+total weight size: 875584, total internal size: 21811200
+total dma used size: 23289856
+Avg Time 12.01ms, Avg FPS = 83.298
+== config_B_i8_mmse core_mask=1
+total weight size: 485568, total internal size: 20582400
+total dma used size: 21598208
+Avg Time 15.87ms, Avg FPS = 62.997
+== config_B_i8_mmse core_mask=7
+total weight size: 485568, total internal size: 20582400
+total dma used size: 21598208
+Avg Time 8.62ms, Avg FPS = 115.985
+== config_C_fp16 core_mask=1
+total weight size: 836608, total internal size: 21811200
+total dma used size: 23236608
+Avg Time 21.76ms, Avg FPS = 45.961
+== config_C_fp16 core_mask=7
+total weight size: 836608, total internal size: 21811200
+total dma used size: 23236608
+Avg Time 11.81ms, Avg FPS = 84.710
+== config_C_i8_mmse core_mask=1
+total weight size: 466880, total internal size: 20582400
+total dma used size: 21573632
+Avg Time 15.83ms, Avg FPS = 63.162
+== config_C_i8_mmse core_mask=7
+total weight size: 466880, total internal size: 20582400
+total dma used size: 21573632
+Avg Time 8.62ms, Avg FPS = 115.958
+== config_D_fp16 core_mask=1
+total weight size: 756608, total internal size: 21811200
+total dma used size: 23171072
+Avg Time 22.22ms, Avg FPS = 45.013
+== config_D_fp16 core_mask=7
+total weight size: 756608, total internal size: 21811200
+total dma used size: 23171072
+Avg Time 11.98ms, Avg FPS = 83.463
+== config_D_i8_mmse core_mask=1
+total weight size: 432192, total internal size: 20582400
+total dma used size: 21544960
+Avg Time 15.87ms, Avg FPS = 63.004
+== config_D_i8_mmse core_mask=7
+total weight size: 432192, total internal size: 20582400
+total dma used size: 21544960
+Avg Time 8.61ms, Avg FPS = 116.082

@@ -43,10 +43,6 @@ def main():
     suffix = args.dtype + ("" if args.quant_algo == "normal" else f"_{args.quant_algo}")
     out = args.onnx.replace(".onnx", f"_{suffix}.rknn")
 
-
-    out = args.onnx.replace(".onnx", f"_{args.dtype}.rknn") 
-    
-
     rknn = RKNN(verbose=False)
     rknn.config(target_platform="rk3588", optimization_level=3,   # no mean/std: input is already normalized
                 quantized_algorithm=args.quant_algo)
