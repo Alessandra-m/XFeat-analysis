@@ -35,16 +35,21 @@ def main():
     ap.add_argument("--onnx", required=True)
     ap.add_argument("--dtype", choices=["fp16", "i8"], default="fp16")
     ap.add_argument("--dataset", default=None, help="calibration dataset.txt (needed for i8)")
+    ap.add_argument("--quant-algo", choices=["normal", "mmse", "kl_divergence"], default="normal",
+                    help="INT8 calibration algorithm")
     ap.add_argument("--image", default=DEFAULT_IMAGE)
     ap.add_argument("--accuracy_analysis", action="store_true", help="per-layer comparison (slow)")
     args = ap.parse_args()
-    if args.dtype == "i8" and not args.dataset:
-        ap.error("--dataset is required for --dtype i8")
+    suffix = args.dtype + ("" if args.quant_algo == "normal" else f"_{args.quant_algo}")
+    out = args.onnx.replace(".onnx", f"_{suffix}.rknn")
 
-    out = args.onnx.replace(".onnx", f"_{args.dtype}.rknn")
+
+    out = args.onnx.replace(".onnx", f"_{args.dtype}.rknn") 
+    
 
     rknn = RKNN(verbose=False)
-    rknn.config(target_platform="rk3588", optimization_level=3)   # no mean/std: input is already normalized
+    rknn.config(target_platform="rk3588", optimization_level=3,   # no mean/std: input is already normalized
+                quantized_algorithm=args.quant_algo)
     assert rknn.load_onnx(model=args.onnx) == 0, "load_onnx failed"
     assert rknn.build(do_quantization=(args.dtype == "i8"), dataset=args.dataset) == 0, "build failed"
     assert rknn.export_rknn(out) == 0, "export failed"

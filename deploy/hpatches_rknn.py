@@ -39,7 +39,7 @@ BILINEAR = InterpolateSparse2d("bilinear")
 
 # ---------------------------------------------------------------- backends: (1,1,H,W) -> 3 arrays
 class OnnxNet:
-    def __init__(self, onnx_path, dtype=None, dataset=None):
+    def __init__(self, onnx_path, dtype=None, dataset=None, quant_algo="normal"):
         import onnxruntime as ort
         self.sess = ort.InferenceSession(onnx_path, providers=["CPUExecutionProvider"])
 
@@ -53,10 +53,10 @@ class OnnxNet:
 class RknnNet:
     """The PC simulator only runs a model built in the same session, so build from ONNX here
     with exactly the settings of deploy/convert_rknn.py."""
-    def __init__(self, onnx_path, dtype, dataset):
+    def __init__(self, onnx_path, dtype, dataset, quant_algo="normal"):
         from rknn.api import RKNN
         self.rknn = RKNN(verbose=False)
-        self.rknn.config(target_platform="rk3588", optimization_level=3)
+        self.rknn.config(target_platform="rk3588", optimization_level=3, quantized_algorithm=quant_algo)
         assert self.rknn.load_onnx(model=onnx_path) == 0, "load_onnx failed"
         assert self.rknn.build(do_quantization=(dtype == "i8"), dataset=dataset) == 0, "build failed"
         assert self.rknn.init_runtime() == 0, "init_runtime failed"
@@ -130,7 +130,7 @@ def extract(args, images, cache):
         print(f"--> {args.backend} {W}x{H}: {len(todo)} images, model {os.path.relpath(onnx_path, HERE)}")
         used[f"{W}x{H}"] = {"onnx": os.path.relpath(onnx_path, HERE), "images": len(todo)}
 
-        net = net_cls(onnx_path, args.dtype, dataset)
+        net = net_cls(onnx_path, args.dtype, dataset, args.quant_algo)
         shapes = [(1, 64, H // 8, W // 8), (1, 65, H // 8, W // 8), (1, 1, H // 8, W // 8)]
         t0 = time.time()
         for n, (seq, i) in enumerate(todo, 1):
@@ -159,6 +159,7 @@ def parse_args():
     p = argparse.ArgumentParser(description="HPatches evaluation of the XFeat backbone via ONNX / RKNN simulator")
     p.add_argument("--backend", choices=["onnx", "rknn"], required=True)
     p.add_argument("--dtype", choices=["fp16", "i8"], default="fp16", help="rknn only")
+    p.add_argument("--quant-algo", choices=["normal", "mmse", "kl_divergence"], default="normal", help="rknn i8 only")
     p.add_argument("--name", default="xfeat", help="model prefix: deploy/models/<name>_<W>x<H>.onnx")
     p.add_argument("--width", type=int, default=640)
     p.add_argument("--height", type=int, default=480)
@@ -179,6 +180,8 @@ def parse_args():
 def main():
     args = parse_args()
     tag = f"{args.name}_{args.backend}" + (f"_{args.dtype}" if args.backend == "rknn" else "")
+    if args.backend == "rknn" and args.dtype == "i8" and args.quant_algo != "normal":
+        tag += f"_{args.quant_algo}"
     cache = os.path.join(args.cache_dir, f"{tag}_r{args.resize}_k{args.top_k}")
     os.makedirs(cache, exist_ok=True)
 
