@@ -8,3 +8,9 @@ data/
 *.pth
 
 .DS_Store
+
+*.onnx
+*.rknn
+
+deploy/calib/
+deploy/cache/
