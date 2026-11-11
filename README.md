@@ -94,6 +94,9 @@ python -m prune.prune_grid_eval --device cuda
 - [7. Профиль чувствительности и неравномерная резка](#p4-s7)
 - [Итог по блоку](#p4-end)
 
+Отчет по промежуточным результам по запуску на плате:
+[`REPORT_rknn.md`](deploy/REPORT_rknn.md)
+
 ---
 
 <a id="p1"></a>
