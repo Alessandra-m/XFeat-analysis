@@ -1,0 +1,285 @@
+I rknn-toolkit2 version: 2.5.0
+I Loading :   0%|                                                            | 0/55 [00:00<?, ?it/s]I Loading : 100%|███████████████████████████████████████████████| 55/55 [00:00<00:00, 106405.31it/s]
+[1;33mW[0m [1;33mload_onnx: The config.mean_values is None, zeros will be set for input 0![0m
+[1;33mW[0m [1;33mload_onnx: The config.std_values is None, ones will be set for input 0![0m
+D base_optimize ...
+D base_optimize done.
+D 
+D fold_constant ...
+D fold_constant done.
+D fold_constant remove nodes = ['/Concat_1', '/Slice_1', '/Shape_1', '/Concat', '/Slice', '/Shape']
+D Fixed the shape information of some tensor!
+D 
+D correct_ops ...
+D correct_ops done.
+D 
+D fuse_ops ...
+D fuse_ops results:
+D     convert_large_stride_conv_to_two_conv: remove node = ['/Conv'], add node = ['/Conv_split', '/Conv_select']
+D     fold_constant ...
+D     fold_constant done.
+D fuse_ops done.
+D 
+D sparse_weight ...
+D sparse_weight done.
+D 
+[1;33mW[0m [1;33mSet temperate env rknn_compute_order=WidthFirst[0m
+I rknn building ...
+I RKNN: [10:33:33.190] compress = 0, conv_eltwise_activation_fuse = 1, global_fuse = 1, multi-core-model-mode = 7, output_optimize = 1, layout_match = 1, enable_argb_group = 0, op_group_sram_opt = 0, enable_flash_attention = 0, op_group_nbuf_opt = 0, safe_fuse = 0, enable_core0_only_mode = 0, disable_first_conv = 0
+I RKNN: librknnc version: 2.5.0 (74ea630ce@2026-09-29T14:54:20)
+D RKNN: [10:33:33.197] RKNN is invoked
+W RKNN: [10:33:33.208] Model initializer tensor data is empty, name: empty_placeholder_0
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNExtractCustomOpAttrs
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNExtractCustomOpAttrs
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNSetOpTargetPass
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNSetOpTargetPass
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNBindNorm
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNBindNorm
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNEliminateQATDataConvert
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNEliminateQATDataConvert
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNConcatBypassPre
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNConcatBypassPre
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNConvStrideFixPass
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNConvStrideFixPass
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNTileGroupConv
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNTileGroupConv
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNAddConvBias
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNAddConvBias
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNTileChannel
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNTileChannel
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNDuplicateWeightPass
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNDuplicateWeightPass
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNInitRNNConst
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNInitRNNConst
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNPerChannelPrep
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNPerChannelPrep
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNReplaceConstantTensorPass
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNReplaceConstantTensorPass
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNBnQuant
+D RKNN: [10:33:33.209] <<<<<<<< end: rknn::RKNNBnQuant
+D RKNN: [10:33:33.209] >>>>>> start: rknn::RKNNFuseOptimizerPass
+D RKNN: [10:33:33.211] <<<<<<<< end: rknn::RKNNFuseOptimizerPass
+D RKNN: [10:33:33.211] >>>>>> start: rknn::RKNNTurnAutoPad
+D RKNN: [10:33:33.211] <<<<<<<< end: rknn::RKNNTurnAutoPad
+D RKNN: [10:33:33.211] >>>>>> start: rknn::RKNNInitCastConst
+D RKNN: [10:33:33.211] <<<<<<<< end: rknn::RKNNInitCastConst
+D RKNN: [10:33:33.211] >>>>>> start: rknn::RKNNMultiSurfacePass
+D RKNN: [10:33:33.211] <<<<<<<< end: rknn::RKNNMultiSurfacePass
+D RKNN: [10:33:33.211] >>>>>> start: rknn::RKNNSubgraphManager
+D RKNN: [10:33:33.211] <<<<<<<< end: rknn::RKNNSubgraphManager
+D RKNN: [10:33:33.211] >>>>>> start: OpEmit
+D RKNN: [10:33:33.211] <<<<<<<< end: OpEmit
+D RKNN: [10:33:33.211] >>>>>> start: rknn::RKNNAddFirstConv
+D RKNN: [10:33:33.211] <<<<<<<< end: rknn::RKNNAddFirstConv
+D RKNN: [10:33:33.211] >>>>>> start: rknn::RKNNTilingPass
+D RKNN: [10:33:33.212] <<<<<<<< end: rknn::RKNNTilingPass
+D RKNN: [10:33:33.212] >>>>>> start: rknn::RKNNLayoutMatchPass
+D RKNN: [10:33:33.212] <<<<<<<< end: rknn::RKNNLayoutMatchPass
+D RKNN: [10:33:33.212] >>>>>> start: rknn::RKNNAddSecondaryNode
+D RKNN: [10:33:33.212] <<<<<<<< end: rknn::RKNNAddSecondaryNode
+D RKNN: [10:33:33.212] >>>>>> start: rknn::RKNNAllocateConvCachePass
+D RKNN: [10:33:33.212] <<<<<<<< end: rknn::RKNNAllocateConvCachePass
+D RKNN: [10:33:33.212] >>>>>> start: OpEmit
+D RKNN: [10:33:33.218] <<<<<<<< end: OpEmit
+D RKNN: [10:33:33.218] >>>>>> start: rknn::RKNNSubGraphMemoryPlanPass
+D RKNN: [10:33:33.218] <<<<<<<< end: rknn::RKNNSubGraphMemoryPlanPass
+D RKNN: [10:33:33.218] >>>>>> start: rknn::RKNNProfileAnalysisPass
+D RKNN: [10:33:33.218] <<<<<<<< end: rknn::RKNNProfileAnalysisPass
+D RKNN: [10:33:33.218] >>>>>> start: rknn::RKNNOperatorIdGenPass
+D RKNN: [10:33:33.218] <<<<<<<< end: rknn::RKNNOperatorIdGenPass
+D RKNN: [10:33:33.218] >>>>>> start: rknn::RKNNWeightTransposePass
+W RKNN: [10:33:33.222] Warning: Tensor /Concat_output_0 need parameter qtype, type is set to float16 by default!
+W RKNN: [10:33:33.222] Warning: Tensor empty_placeholder_0 need parameter qtype, type is set to float16 by default!
+W RKNN: [10:33:33.222] Warning: Tensor /Concat_1_output_0 need parameter qtype, type is set to float16 by default!
+W RKNN: [10:33:33.222] Warning: Tensor empty_placeholder_0 need parameter qtype, type is set to float16 by default!
+D RKNN: [10:33:33.222] <<<<<<<< end: rknn::RKNNWeightTransposePass
+D RKNN: [10:33:33.222] >>>>>> start: rknn::RKNNCPUWeightTransposePass
+D RKNN: [10:33:33.222] <<<<<<<< end: rknn::RKNNCPUWeightTransposePass
+D RKNN: [10:33:33.222] >>>>>> start: rknn::RKNNModelBuildPass
+D RKNN: [10:33:33.232] <<<<<<<< end: rknn::RKNNModelBuildPass
+D RKNN: [10:33:33.232] >>>>>> start: rknn::RKNNModelRegCmdbuildPass
+D RKNN: [10:33:33.236] --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [10:33:33.236]                                                         Network Layer Information Table                                                      
+D RKNN: [10:33:33.236] --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [10:33:33.236] ID   OpType             DataType Target InputShape                               OutputShape            Cycles(DDR/NPU/Total)    RW(KB)       FullName        
+D RKNN: [10:33:33.236] --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [10:33:33.236] 0    InputOperator      FLOAT16  CPU    \                                        (1,1,480,640)          0/0/0                    0            InputOperator:image
+D RKNN: [10:33:33.236] 1    Conv               FLOAT16  NPU    (1,1,480,640),(1,1,1,1)                  (1,1,480,640)          233771/614400/614400     600                          
+D RKNN: [10:33:33.236] 2    Conv               FLOAT16  NPU    (1,1,480,640),(64,1,8,8)                 (1,64,119,159)         312955/1211392/1211392   4864         Conv:/Conv_split
+D RKNN: [10:33:33.236] 3    Conv               FLOAT16  NPU    (1,64,119,159),(1,64,1,1)                (1,64,60,80)           128368/4800/128368       2365         Conv:/Conv_select
+D RKNN: [10:33:33.236] 4    AveragePool        FLOAT16  NPU    (1,1,480,640)                            (1,1,120,160)          0/0/0                    4800         AveragePool:/skip1/skip1.0/AveragePool
+D RKNN: [10:33:33.236] 5    Conv               FLOAT16  NPU    (1,1,120,160),(24,1,1,1),(24)            (1,24,120,160)         51957/19200/51957        300          Conv:/skip1/skip1.1/Conv
+D RKNN: [10:33:33.236] 6    ConvRelu           FLOAT16  NPU    (1,1,480,640),(4,1,3,3),(4)              (1,4,480,640)          415619/2764800/2764800   4800         Conv:/block1/block1.0/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 7    ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           52307/38400/52307        608          Conv:/keypoint_head/keypoint_head.0/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 8    ConvRelu           FLOAT16  NPU    (1,4,480,640),(8,4,3,3),(8)              (1,8,240,320)          259797/691200/691200     4801         Conv:/block1/block1.1/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 9    ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           52307/38400/52307        608          Conv:/keypoint_head/keypoint_head.1/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 10   ConvRelu           FLOAT16  NPU    (1,8,240,320),(8,8,3,3),(8)              (1,8,240,320)          103950/691200/691200     1201         Conv:/block1/block1.2/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 11   ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           52307/38400/52307        608          Conv:/keypoint_head/keypoint_head.2/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 12   Conv               FLOAT16  NPU    (1,64,60,80),(65,64,1,1),(65)            (1,65,60,80)           58808/48000/58808        608          Conv:/keypoint_head/keypoint_head.3/Conv
+D RKNN: [10:33:33.236] 13   OutputOperator     FLOAT16  CPU    (1,65,60,80)                             \                      0/0/0                    750          OutputOperator:keypoints
+D RKNN: [10:33:33.236] 14   ConvReluAdd        FLOAT16  NPU    (1,8,240,320),(24,8,3,3),(24),...        (1,24,120,160)         130024/345600/345600     2103         Conv:/block1/block1.3/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 15   ConvRelu           FLOAT16  NPU    (1,24,120,160),(24,24,3,3),(24)          (1,24,120,160)         78368/345600/345600      910          Conv:/block2/block2.0/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 16   ConvRelu           FLOAT16  NPU    (1,24,120,160),(24,24,3,3),(24)          (1,24,120,160)         78368/345600/345600      910          Conv:/block2/block2.1/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 17   ConvRelu           FLOAT16  NPU    (1,24,120,160),(64,24,3,3),(64)          (1,64,60,80)           66506/172800/172800      936          Conv:/block3/block3.0/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 18   ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,3,3),(64)            (1,64,60,80)           55077/345600/345600      672          Conv:/block3/block3.1/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 19   ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           52307/38400/52307        608          Conv:/block3/block3.2/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 20   ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,3,3),(64)            (1,64,30,40)           35596/86400/86400        672          Conv:/block4/block4.0/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 21   ConvRelu           FLOAT16  NPU    (1,64,30,40),(64,64,3,3),(64)            (1,64,30,40)           16115/86400/86400        222          Conv:/block4/block4.1/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 22   ConvRelu           FLOAT16  NPU    (1,64,30,40),(64,64,3,3),(64)            (1,64,30,40)           16115/86400/86400        222          Conv:/block4/block4.2/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 23   ConvRelu           FLOAT16  NPU    (1,64,30,40),(128,64,3,3),(128)          (1,128,15,20)          15996/43776/43776        294          Conv:/block5/block5.0/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 24   ConvRelu           FLOAT16  NPU    (1,128,15,20),(128,128,3,3),(128)        (1,128,15,20)          18984/87552/87552        363          Conv:/block5/block5.1/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 25   ConvRelu           FLOAT16  NPU    (1,128,15,20),(128,128,3,3),(128)        (1,128,15,20)          18984/87552/87552        363          Conv:/block5/block5.2/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 26   ConvRelu           FLOAT16  NPU    (1,128,15,20),(64,128,1,1),(64)          (1,64,15,20)           5574/4864/5574           91           Conv:/block5/block5.3/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 27   Resize             FLOAT16  NPU    (1,64,30,40),(1),(1),(4)                 (1,64,60,80)           0/0/0                    150          Resize:/Resize  
+D RKNN: [10:33:33.236] 28   Add                FLOAT16  NPU    (1,64,60,80),(1,64,60,80)                (1,64,60,80)           0/0/0                    1200         Add:/Add_1      
+D RKNN: [10:33:33.236] 29   Resize             FLOAT16  NPU    (1,64,15,20),(1),(1),(4)                 (1,64,60,80)           0/0/0                    37           Resize:/Resize_1
+D RKNN: [10:33:33.236] 30   Add                FLOAT16  NPU    (1,64,60,80),(1,64,60,80)                (1,64,60,80)           0/0/0                    1200         Add:/Add_2      
+D RKNN: [10:33:33.236] 31   ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,3,3),(64)            (1,64,60,80)           55077/345600/345600      672          Conv:/block_fusion/block_fusion.0/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 32   ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,3,3),(64)            (1,64,60,80)           55077/345600/345600      672          Conv:/block_fusion/block_fusion.1/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 33   Conv               FLOAT16  NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           52307/38400/52307        608          Conv:/block_fusion/block_fusion.2/Conv
+D RKNN: [10:33:33.236] 34   OutputOperator     FLOAT16  CPU    (1,64,60,80)                             \                      0/0/0                    600          OutputOperator:feats
+D RKNN: [10:33:33.236] 35   ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           52307/38400/52307        608          Conv:/heatmap_head/heatmap_head.0/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 36   ConvRelu           FLOAT16  NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           52307/38400/52307        608          Conv:/heatmap_head/heatmap_head.1/layer/layer.0/Conv
+D RKNN: [10:33:33.236] 37   ConvSigmoid        FLOAT16  NPU    (1,64,60,80),(1,64,1,1),(1)              (1,1,60,80)            38970/9600/38970         600          Conv:/heatmap_head/heatmap_head.2/Conv
+D RKNN: [10:33:33.236] 38   OutputOperator     FLOAT16  CPU    (1,1,60,80)                              \                      0/0/0                    300          OutputOperator:heatmap
+D RKNN: [10:33:33.236] --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [10:33:33.236] <<<<<<<< end: rknn::RKNNModelRegCmdbuildPass
+D RKNN: [10:33:33.236] >>>>>> start: rknn::RKNNModelExportPass
+D RKNN: [10:33:33.236] Export RKNN model to /tmp/tmp9pc155qm/check.rknn
+D RKNN: [10:33:33.239] <<<<<<<< end: rknn::RKNNModelExportPass
+D RKNN: [10:33:33.239] >>>>>> start: rknn::RKNNMemStatisticsPass
+D RKNN: [10:33:33.239] ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [10:33:33.239]                                                        Feature Tensor Information Table                                                   
+D RKNN: [10:33:33.239] ------------------------------------------------------------------------------------------------------------------------------------+---------------------------------
+D RKNN: [10:33:33.239] ID  User           Tensor                                                     DataType  DataFormat   OrigShape      NativeShape     |     [Start       End)       Size
+D RKNN: [10:33:33.239] ------------------------------------------------------------------------------------------------------------------------------------+---------------------------------
+D RKNN: [10:33:33.239] 1   Conv           image                                                      FLOAT16   NC1HWC2      (1,1,480,640)  (1,4,480,640,1) | 0x00000000 0x00096000 0x00096000
+D RKNN: [10:33:33.239] 2   Conv           New_input_image                                            FLOAT16   NC1HWC2      (1,1,480,640)  (1,8,480,640,8) | 0x00096000 0x009f6000 0x00960000
+D RKNN: [10:33:33.239] 3   Conv           image_conv                                                 FLOAT16   NC1HWC2      (1,64,119,159) (1,32,119,159,8) | 0x009f6000 0x00c45600 0x0024f600
+D RKNN: [10:33:33.239] 4   AveragePool    New_input_image                                            FLOAT16   NC1HWC2      (1,1,480,640)  (1,8,480,640,8) | 0x00096000 0x009f6000 0x00960000
+D RKNN: [10:33:33.239] 5   Conv           /skip1/skip1.0/AveragePool_output_0                        FLOAT16   NC1HWC2      (1,1,120,160)  (1,4,120,160,8) | 0x009f6000 0x00a41000 0x0004b000
+D RKNN: [10:33:33.239] 6   ConvRelu       New_input_image                                            FLOAT16   NC1HWC2      (1,1,480,640)  (1,8,480,640,8) | 0x00096000 0x009f6000 0x00960000
+D RKNN: [10:33:33.239] 7   ConvRelu       /Conv_output_0                                             FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00000000 0x00096000 0x00096000
+D RKNN: [10:33:33.239] 8   ConvRelu       /block1/block1.0/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,4,480,640)  (1,8,480,640,8) | 0x00b6d000*0x014cd000 0x00960000
+D RKNN: [10:33:33.239] 9   ConvRelu       /keypoint_head/keypoint_head.0/layer/layer.2/Relu_output_0 FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00096000 0x0012c000 0x00096000
+D RKNN: [10:33:33.239] 10  ConvRelu       /block1/block1.1/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,8,240,320)  (1,8,240,320,8) | 0x0012c000 0x00384000 0x00258000
+D RKNN: [10:33:33.239] 11  ConvRelu       /keypoint_head/keypoint_head.1/layer/layer.2/Relu_output_0 FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00000000 0x00096000 0x00096000
+D RKNN: [10:33:33.239] 12  Conv           /keypoint_head/keypoint_head.2/layer/layer.2/Relu_output_0 FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00096000 0x0012c000 0x00096000
+D RKNN: [10:33:33.239] 13  OutputOperator keypoints                                                  FLOAT16   NC1HWC2      (1,65,60,80)   (1,40,60,80,8)  | 0x0012c000 0x001e7800 0x000bb800
+D RKNN: [10:33:33.239] 14  ConvReluAdd    /block1/block1.2/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,8,240,320)  (1,8,240,320,8) | 0x00384000 0x005dc000 0x00258000
+D RKNN: [10:33:33.239] 14  ConvReluAdd    /skip1/skip1.1/Conv_output_0                               FLOAT16   NC1HWC2      (1,24,120,160) (1,16,120,160,8) | 0x00a41000 0x00b6d000 0x0012c000
+D RKNN: [10:33:33.239] 15  ConvRelu       /Add_output_0                                              FLOAT16   NC1HWC2      (1,24,120,160) (1,16,120,160,8) | 0x00000000 0x0012c000 0x0012c000
+D RKNN: [10:33:33.239] 16  ConvRelu       /block2/block2.0/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,24,120,160) (1,16,120,160,8) | 0x001e7800 0x00313800 0x0012c000
+D RKNN: [10:33:33.239] 17  ConvRelu       /block2/block2.1/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,24,120,160) (1,16,120,160,8) | 0x00000000 0x0012c000 0x0012c000
+D RKNN: [10:33:33.239] 18  ConvRelu       /block3/block3.0/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x001e7800 0x0027d800 0x00096000
+D RKNN: [10:33:33.239] 19  ConvRelu       /block3/block3.1/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00000000 0x00096000 0x00096000
+D RKNN: [10:33:33.239] 20  ConvRelu       /block3/block3.2/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00096000 0x0012c000 0x00096000
+D RKNN: [10:33:33.239] 21  ConvRelu       /block4/block4.0/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,30,40)   (1,32,30,40,8)  | 0x00000000 0x00025800 0x00025800
+D RKNN: [10:33:33.239] 22  ConvRelu       /block4/block4.1/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,30,40)   (1,32,30,40,8)  | 0x00025800 0x0004b000 0x00025800
+D RKNN: [10:33:33.239] 23  ConvRelu       /block4/block4.2/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,30,40)   (1,32,30,40,8)  | 0x00000000 0x00025800 0x00025800
+D RKNN: [10:33:33.239] 24  ConvRelu       /block5/block5.0/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,128,15,20)  (1,64,15,20,8)  | 0x00025800 0x00038400 0x00012c00
+D RKNN: [10:33:33.239] 25  ConvRelu       /block5/block5.1/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,128,15,20)  (1,64,15,20,8)  | 0x00038400 0x0004b000 0x00012c00
+D RKNN: [10:33:33.239] 26  ConvRelu       /block5/block5.2/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,128,15,20)  (1,64,15,20,8)  | 0x00025800 0x00038400 0x00012c00
+D RKNN: [10:33:33.239] 27  Resize         /block4/block4.2/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,30,40)   (1,32,30,40,8)  | 0x00000000 0x00025800 0x00025800
+D RKNN: [10:33:33.239] 27  Resize         /block4/block4.2/layer/layer.2/Relu_output_0_exSecondary   FLOAT16   NC1HWC2      (1,64,32,42)   (1,32,32,42,8)  | 0x00041a00 0x0006ba00 0x0002a000
+D RKNN: [10:33:33.239] 28  Add            /block3/block3.2/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00096000 0x0012c000 0x00096000
+D RKNN: [10:33:33.239] 28  Add            /Resize_output_0                                           FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x001e7800 0x0027d800 0x00096000
+D RKNN: [10:33:33.239] 29  Resize         /block5/block5.3/layer/layer.2/Relu_output_0               FLOAT16   NC1HWC2      (1,64,15,20)   (1,32,15,20,8)  | 0x00038400 0x00041a00 0x00009600
+D RKNN: [10:33:33.239] 29  Resize         /block5/block5.3/layer/layer.2/Relu_output_0_exSecondary   FLOAT16   NC1HWC2      (1,64,17,22)   (1,32,17,22,8)  | 0x00000000 0x0000bc00 0x0000bc00
+D RKNN: [10:33:33.239] 30  Add            /Add_1_output_0                                            FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x0027d800 0x00313800 0x00096000
+D RKNN: [10:33:33.239] 30  Add            /Resize_1_output_0                                         FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x001e7800 0x0027d800 0x00096000
+D RKNN: [10:33:33.239] 31  ConvRelu       /Add_2_output_0                                            FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00000000 0x00096000 0x00096000
+D RKNN: [10:33:33.239] 32  ConvRelu       /block_fusion/block_fusion.0/layer/layer.2/Relu_output_0   FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00096000 0x0012c000 0x00096000
+D RKNN: [10:33:33.239] 33  Conv           /block_fusion/block_fusion.1/layer/layer.2/Relu_output_0   FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00000000 0x00096000 0x00096000
+D RKNN: [10:33:33.239] 34  OutputOperator feats                                                      FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00096000 0x0012c000 0x00096000
+D RKNN: [10:33:33.239] 35  ConvRelu       feats                                                      FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00096000 0x0012c000 0x00096000
+D RKNN: [10:33:33.239] 36  ConvRelu       /heatmap_head/heatmap_head.0/layer/layer.2/Relu_output_0   FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x00000000 0x00096000 0x00096000
+D RKNN: [10:33:33.239] 37  ConvSigmoid    /heatmap_head/heatmap_head.1/layer/layer.2/Relu_output_0   FLOAT16   NC1HWC2      (1,64,60,80)   (1,32,60,80,8)  | 0x001e7800 0x0027d800 0x00096000
+D RKNN: [10:33:33.239] 38  OutputOperator heatmap                                                    FLOAT16   NC1HWC2      (1,1,60,80)    (1,16,60,80,8)  | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [10:33:33.239] ------------------------------------------------------------------------------------------------------------------------------------+---------------------------------
+D RKNN: [10:33:33.239] -----------------------------------------------------------------------------------------------------
+D RKNN: [10:33:33.239]                                  Const Tensor Information Table                    
+D RKNN: [10:33:33.239] -------------------------------------------------------------------+---------------------------------
+D RKNN: [10:33:33.239] ID  User        Tensor                     DataType  OrigShape     |     [Start       End)       Size
+D RKNN: [10:33:33.239] -------------------------------------------------------------------+---------------------------------
+D RKNN: [10:33:33.239] 1   Conv        Pre_weightimage            FLOAT16   (1,1,1,1)     | 0x00157200 0x00157210 0x00000010
+D RKNN: [10:33:33.239] 2   Conv        unshuffle_w                FLOAT16   (64,1,8,8)    | 0x00000000 0x00010000 0x00010000
+D RKNN: [10:33:33.239] 3   Conv        /Conv_select_i1            FLOAT16   (1,64,1,1)    | 0x00157100 0x00157180 0x00000080
+D RKNN: [10:33:33.239] 5   Conv        net.skip1.1.weight         FLOAT16   (24,1,1,1)    | 0x00010000 0x00010180 0x00000180
+D RKNN: [10:33:33.239] 5   Conv        net.skip1.1.bias           FLOAT     (24)          | 0x00010180 0x00010200 0x00000080
+D RKNN: [10:33:33.239] 6   ConvRelu    onnx::Conv_271             FLOAT16   (4,1,3,3)     | 0x00014580 0x000147c0 0x00000240
+D RKNN: [10:33:33.239] 6   ConvRelu    onnx::Conv_272             FLOAT     (4)           | 0x000147c0 0x00014800 0x00000040
+D RKNN: [10:33:33.239] 7   ConvRelu    onnx::Conv_331             FLOAT16   (64,64,1,1)   | 0x00150d80 0x00152d80 0x00002000
+D RKNN: [10:33:33.239] 7   ConvRelu    onnx::Conv_332             FLOAT     (64)          | 0x00152d80 0x00152e80 0x00000100
+D RKNN: [10:33:33.239] 8   ConvRelu    onnx::Conv_274             FLOAT16   (8,4,3,3)     | 0x00014800 0x00014c80 0x00000480
+D RKNN: [10:33:33.239] 8   ConvRelu    onnx::Conv_275             FLOAT     (8)           | 0x00014c80 0x00014cc0 0x00000040
+D RKNN: [10:33:33.239] 9   ConvRelu    onnx::Conv_334             FLOAT16   (64,64,1,1)   | 0x00152e80 0x00154e80 0x00002000
+D RKNN: [10:33:33.239] 9   ConvRelu    onnx::Conv_335             FLOAT     (64)          | 0x00154e80 0x00154f80 0x00000100
+D RKNN: [10:33:33.239] 10  ConvRelu    onnx::Conv_277             FLOAT16   (8,8,3,3)     | 0x00014cc0 0x00015140 0x00000480
+D RKNN: [10:33:33.239] 10  ConvRelu    onnx::Conv_278             FLOAT     (8)           | 0x00015140 0x00015180 0x00000040
+D RKNN: [10:33:33.239] 11  ConvRelu    onnx::Conv_337             FLOAT16   (64,64,1,1)   | 0x00154f80 0x00156f80 0x00002000
+D RKNN: [10:33:33.239] 11  ConvRelu    onnx::Conv_338             FLOAT     (64)          | 0x00156f80 0x00157080 0x00000100
+D RKNN: [10:33:33.239] 12  Conv        net.keypoint_head.3.weight FLOAT16   (65,64,1,1)   | 0x000123c0 0x00014440 0x00002080
+D RKNN: [10:33:33.239] 12  Conv        net.keypoint_head.3.bias   FLOAT     (65)          | 0x00014440 0x00014580 0x00000140
+D RKNN: [10:33:33.239] 14  ConvReluAdd onnx::Conv_280             FLOAT16   (24,8,3,3)    | 0x00015180 0x00015f00 0x00000d80
+D RKNN: [10:33:33.239] 14  ConvReluAdd onnx::Conv_281             FLOAT     (24)          | 0x00015f00 0x00015f80 0x00000080
+D RKNN: [10:33:33.239] 15  ConvRelu    onnx::Conv_283             FLOAT16   (24,24,3,3)   | 0x00015f80 0x00019580 0x00003600
+D RKNN: [10:33:33.239] 15  ConvRelu    onnx::Conv_284             FLOAT     (24)          | 0x00019580 0x00019600 0x00000080
+D RKNN: [10:33:33.239] 16  ConvRelu    onnx::Conv_286             FLOAT16   (24,24,3,3)   | 0x00019600 0x0001cc00 0x00003600
+D RKNN: [10:33:33.239] 16  ConvRelu    onnx::Conv_287             FLOAT     (24)          | 0x0001cc00 0x0001cc80 0x00000080
+D RKNN: [10:33:33.239] 17  ConvRelu    onnx::Conv_289             FLOAT16   (64,24,3,3)   | 0x0001cc80 0x00025c80 0x00009000
+D RKNN: [10:33:33.239] 17  ConvRelu    onnx::Conv_290             FLOAT     (64)          | 0x00025c80 0x00025d80 0x00000100
+D RKNN: [10:33:33.239] 18  ConvRelu    onnx::Conv_292             FLOAT16   (64,64,3,3)   | 0x00025d80 0x00037d80 0x00012000
+D RKNN: [10:33:33.239] 18  ConvRelu    onnx::Conv_293             FLOAT     (64)          | 0x00037d80 0x00037e80 0x00000100
+D RKNN: [10:33:33.239] 19  ConvRelu    onnx::Conv_295             FLOAT16   (64,64,1,1)   | 0x00037e80 0x00039e80 0x00002000
+D RKNN: [10:33:33.239] 19  ConvRelu    onnx::Conv_296             FLOAT     (64)          | 0x00039e80 0x00039f80 0x00000100
+D RKNN: [10:33:33.239] 20  ConvRelu    onnx::Conv_298             FLOAT16   (64,64,3,3)   | 0x00039f80 0x0004bf80 0x00012000
+D RKNN: [10:33:33.239] 20  ConvRelu    onnx::Conv_299             FLOAT     (64)          | 0x0004bf80 0x0004c080 0x00000100
+D RKNN: [10:33:33.239] 21  ConvRelu    onnx::Conv_301             FLOAT16   (64,64,3,3)   | 0x0004c080 0x0005e080 0x00012000
+D RKNN: [10:33:33.239] 21  ConvRelu    onnx::Conv_302             FLOAT     (64)          | 0x0005e080 0x0005e180 0x00000100
+D RKNN: [10:33:33.239] 22  ConvRelu    onnx::Conv_304     [1;33mW[0m [1;33mRestore temperate env rknn_compute_order=[0m
+I rknn building done.
+I Target is None, use simulator!
+compress=0, global_fuse=1, safe_fuse=0, output_optimize=1, op_group_sram_opt=0, op_group_nbuf_opt=0, enable_flash_attention=0, conv_eltwise_activation_fuse=1, enable_rnn_loop=1, memory_plan_strategy=BestFit, enable_core0_only_mode=0, disable_first_conv=0
+--> saved deploy/models/xfeat_640x480_fp16.rknn (1.98 MB)
+I GraphPreparing :   0%|                                                     | 0/59 [00:00<?, ?it/s]I GraphPreparing : 100%|█████████████████████████████████████████| 59/59 [00:00<00:00, 13075.34it/s]
+I SessionPreparing :   0%|                                                   | 0/59 [00:00<?, ?it/s]I SessionPreparing : 100%|████████████████████████████████████████| 59/59 [00:00<00:00, 3804.74it/s]
+--> simulator (fp16) vs onnxruntime, input image (1, 1, 480, 640):
+    feats     cos=1.00000  max|diff|=1.185e-02  ref range=[-7.46, 7.33]
+    keypoints cos=1.00000  max|diff|=1.046e-01  ref range=[-35.15, 10.49]
+    heatmap   cos=1.00000  max|diff|=1.620e-03  ref range=[0.01, 0.73]
+    descriptors: mean per-cell cosine = 1.00000
+        FLOAT16   (64,64,3,3)   | 0x0005e180 0x00070180 0x00012000
+D RKNN: [10:33:33.239] 22  ConvRelu    onnx::Conv_305             FLOAT     (64)          | 0x00070180 0x00070280 0x00000100
+D RKNN: [10:33:33.239] 23  ConvRelu    onnx::Conv_307             FLOAT16   (128,64,3,3)  | 0x00070280 0x00094280 0x00024000
+D RKNN: [10:33:33.239] 23  ConvRelu    onnx::Conv_308             FLOAT     (128)         | 0x00094280 0x00094480 0x00000200
+D RKNN: [10:33:33.239] 24  ConvRelu    onnx::Conv_310             FLOAT16   (128,128,3,3) | 0x00094480 0x000dc480 0x00048000
+D RKNN: [10:33:33.239] 24  ConvRelu    onnx::Conv_311             FLOAT     (128)         | 0x000dc480 0x000dc680 0x00000200
+D RKNN: [10:33:33.239] 25  ConvRelu    onnx::Conv_313             FLOAT16   (128,128,3,3) | 0x000dc680 0x00124680 0x00048000
+D RKNN: [10:33:33.239] 25  ConvRelu    onnx::Conv_314             FLOAT     (128)         | 0x00124680 0x00124880 0x00000200
+D RKNN: [10:33:33.239] 26  ConvRelu    onnx::Conv_316             FLOAT16   (64,128,1,1)  | 0x00124880 0x00128880 0x00004000
+D RKNN: [10:33:33.239] 26  ConvRelu    onnx::Conv_317             FLOAT     (64)          | 0x00128880 0x00128980 0x00000100
+D RKNN: [10:33:33.239] 27  Resize      empty_placeholder_0        FLOAT     (1)           | 0x00157180 0x00157200 0x00000080
+D RKNN: [10:33:33.239] 27  Resize      empty_placeholder_0        FLOAT     (1)           | 0x00157180 0x00157200 0x00000080
+D RKNN: [10:33:33.239] 27  Resize      /Concat_output_0           INT64     (4)           | 0x00157080 0x001570a0 0x00000020
+D RKNN: [10:33:33.239] 29  Resize      empty_placeholder_0        FLOAT     (1)           | 0x00157180 0x00157200 0x00000080
+D RKNN: [10:33:33.239] 29  Resize      empty_placeholder_0        FLOAT     (1)           | 0x00157180 0x00157200 0x00000080
+D RKNN: [10:33:33.239] 29  Resize      /Concat_1_output_0         INT64     (4)           | 0x001570c0 0x001570e0 0x00000020
+D RKNN: [10:33:33.239] 31  ConvRelu    onnx::Conv_319             FLOAT16   (64,64,3,3)   | 0x00128980 0x0013a980 0x00012000
+D RKNN: [10:33:33.239] 31  ConvRelu    onnx::Conv_320             FLOAT     (64)          | 0x0013a980 0x0013aa80 0x00000100
+D RKNN: [10:33:33.239] 32  ConvRelu    onnx::Conv_322             FLOAT16   (64,64,3,3)   | 0x0013aa80 0x0014ca80 0x00012000
+D RKNN: [10:33:33.239] 32  ConvRelu    onnx::Conv_323             FLOAT     (64)          | 0x0014ca80 0x0014cb80 0x00000100
+D RKNN: [10:33:33.239] 33  Conv        net.block_fusion.2.weight  FLOAT16   (64,64,1,1)   | 0x00010200 0x00012200 0x00002000
+D RKNN: [10:33:33.239] 33  Conv        net.block_fusion.2.bias    FLOAT     (64)          | 0x00012200 0x00012300 0x00000100
+D RKNN: [10:33:33.239] 35  ConvRelu    onnx::Conv_325             FLOAT16   (64,64,1,1)   | 0x0014cb80 0x0014eb80 0x00002000
+D RKNN: [10:33:33.239] 35  ConvRelu    onnx::Conv_326             FLOAT     (64)          | 0x0014eb80 0x0014ec80 0x00000100
+D RKNN: [10:33:33.239] 36  ConvRelu    onnx::Conv_328             FLOAT16   (64,64,1,1)   | 0x0014ec80 0x00150c80 0x00002000
+D RKNN: [10:33:33.239] 36  ConvRelu    onnx::Conv_329             FLOAT     (64)          | 0x00150c80 0x00150d80 0x00000100
+D RKNN: [10:33:33.239] 37  ConvSigmoid net.heatmap_head.2.weight  FLOAT16   (1,64,1,1)    | 0x00012300 0x00012380 0x00000080
+D RKNN: [10:33:33.239] 37  ConvSigmoid net.heatmap_head.2.bias    FLOAT     (1)           | 0x00012380 0x000123c0 0x00000040
+D RKNN: [10:33:33.239] -------------------------------------------------------------------+---------------------------------
+D RKNN: [10:33:33.240] ----------------------------------------
+D RKNN: [10:33:33.240] Total Internal Memory Size: 21300KB
+D RKNN: [10:33:33.240] Total Weight Memory Size: 1374.56KB
+D RKNN: [10:33:33.240] ----------------------------------------
+D RKNN: [10:33:33.240] <<<<<<<< end: rknn::RKNNMemStatisticsPass

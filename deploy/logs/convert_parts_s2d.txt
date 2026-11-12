@@ -1,0 +1,41 @@
+== deploy/models/parts_s2d/q0_min.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99988  max|diff|=3.595e-02  ref range=[-1.29, 2.74]
+    descriptors: mean per-cell cosine = 0.99912
+== deploy/models/parts_s2d/q1_block1.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99966  max|diff|=4.612e-01  ref range=[-3.93, 15.37]
+    descriptors: mean per-cell cosine = 0.99962
+== deploy/models/parts_s2d/q2_block2.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99895  max|diff|=4.323e-01  ref range=[0.00, 8.20]
+    descriptors: mean per-cell cosine = 0.99797
+== deploy/models/parts_s2d/q3_block3.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99027  max|diff|=7.871e-01  ref range=[0.00, 4.69]
+    descriptors: mean per-cell cosine = 0.98898
+== deploy/models/parts_s2d/q4_block4.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99518  max|diff|=3.987e-01  ref range=[0.00, 2.45]
+    descriptors: mean per-cell cosine = 0.99490
+== deploy/models/parts_s2d/q5_block5.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99423  max|diff|=4.310e-01  ref range=[0.00, 3.43]
+    descriptors: mean per-cell cosine = 0.99400
+== deploy/models/parts_s2d/q6_fpn.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99623  max|diff|=7.705e-01  ref range=[0.00, 6.15]
+    descriptors: mean per-cell cosine = 0.99620
+== deploy/models/parts_s2d/q7_fusion.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99550  max|diff|=8.900e-01  ref range=[-7.46, 7.33]
+    descriptors: mean per-cell cosine = 0.99550
+== deploy/models/parts_s2d/q8_desc.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99550  max|diff|=8.900e-01  ref range=[-7.46, 7.33]
+    out1      cos=0.99613  max|diff|=1.327e-01  ref range=[0.01, 0.73]
+    descriptors: mean per-cell cosine = 0.99550
+== deploy/models/parts_s2d/q9_kpts.onnx
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 16, 120, 160):
+    out0      cos=0.99473  max|diff|=4.777e+00  ref range=[-35.15, 10.49]
+    descriptors: mean per-cell cosine = 0.99443

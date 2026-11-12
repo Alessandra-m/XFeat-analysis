@@ -7,7 +7,7 @@ Stage 1 extracts keypoints + descriptors for every image and caches them (one RK
 stage 2 matches cached features (MNN, min_cossim=-1, as xfeat.match_xfeat) and computes the metrics.
 """
 import os
-os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")          # post-processing on CPU, as on the board
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")         
 
 import argparse
 import json
@@ -15,7 +15,7 @@ import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from common.paths import HERE, RESULTS_DIR                  # also puts XFeat on sys.path
+from common.paths import HERE, RESULTS_DIR                  
 
 import cv2
 import numpy as np
@@ -24,7 +24,7 @@ import torch.nn.functional as F
 
 from benchmark.hpatches_eval import (list_pairs, resize_short, load_pair, magsac, corner_error, mma,
                                      summarize, print_summary, environment, to_json)
-from deploy.preprocess import normalize
+from deploy.preprocess import normalize, s2d, s2d_factor
 from modules.interpolator import InterpolateSparse2d
 from modules.xfeat import XFeat
 
@@ -32,19 +32,35 @@ MODELS_DIR = os.path.join(HERE, "deploy", "models")
 CALIB_DIR = os.path.join(HERE, "deploy", "calib")
 CACHE_DIR = os.path.join(HERE, "deploy", "cache")
 
-XF = XFeat(weights=None)       # only its post-processing / matching methods are used, not its network
+XF = XFeat(weights=None)       
 NEAREST = InterpolateSparse2d("nearest")
 BILINEAR = InterpolateSparse2d("bilinear")
 
 
-# ---------------------------------------------------------------- backends: (1,1,H,W) -> 3 arrays
+def input_factors(onnx_path):
+    """Space-to-depth factor of each model input: 1 for our export, 4 (+ 8) for deploy/s2d_net.py models."""
+    import onnx
+    g = onnx.load(onnx_path).graph
+    init = {t.name for t in g.initializer}
+    chans = [i.type.tensor_type.shape.dim[1].dim_value for i in g.input if i.name not in init]
+    assert 3 not in chans, "raw 3-channel input (gray model) is not supported here: pre-processing must be on the CPU"
+    return [s2d_factor(c) for c in chans]
+
+
+def model_feed(x, factors):
+    """Normalized gray (1, 1, H, W) -> the list of model inputs (space-to-depth by each factor)."""
+    return [s2d(x, f) for f in factors]
+
+
 class OnnxNet:
     def __init__(self, onnx_path, dtype=None, dataset=None, quant_algo="normal"):
         import onnxruntime as ort
         self.sess = ort.InferenceSession(onnx_path, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+        self.factors = input_factors(onnx_path)
 
     def __call__(self, x):
-        return self.sess.run(None, {"image": x})
+        return self.sess.run(None, dict(zip(self.names, model_feed(x, self.factors))))
 
     def release(self):
         pass
@@ -60,15 +76,16 @@ class RknnNet:
         assert self.rknn.load_onnx(model=onnx_path) == 0, "load_onnx failed"
         assert self.rknn.build(do_quantization=(dtype == "i8"), dataset=dataset) == 0, "build failed"
         assert self.rknn.init_runtime() == 0, "init_runtime failed"
+        self.factors = input_factors(onnx_path)
 
     def __call__(self, x):
-        return self.rknn.inference(inputs=[x], data_format="nchw")
+        xs = model_feed(x, self.factors)
+        return self.rknn.inference(inputs=xs, data_format=["nchw"] * len(xs))
 
     def release(self):
         self.rknn.release()
 
 
-# ---------------------------------------------------------------- XFeat post-processing (B = 1)
 @torch.inference_mode()
 def postprocess(feats, kpts, heat, rh, rw, top_k, threshold=0.05):
     """Same steps as XFeat.detectAndCompute after `M1, K1, H1 = self.net(x)`."""
@@ -94,10 +111,9 @@ def postprocess(feats, kpts, heat, rh, rw, top_k, threshold=0.05):
     return mkpts[0][valid].numpy().astype(np.float32), desc[0][valid].numpy().astype(np.float32)
 
 
-# ---------------------------------------------------------------- stage 1: extraction + cache
 def read_image(root, seq, i, short):
     img = cv2.imread(os.path.join(root, seq, f"{i}.ppm"))
-    return resize_short(img, short)[0]                       # identical to load_pair()
+    return resize_short(img, short)[0]                    
 
 
 def model_size(img, args):
@@ -122,8 +138,8 @@ def extract(args, images, cache):
     net_cls = RknnNet if args.backend == "rknn" else OnnxNet
     used = {}
     for (W, H), todo in groups.items():
-        onnx_path = os.path.join(MODELS_DIR, f"{args.name}_{W}x{H}.onnx")
-        dataset = os.path.join(CALIB_DIR, f"{W}x{H}", "dataset.txt")
+        onnx_path = os.path.join(args.models_dir, f"{args.name}_{W}x{H}.onnx")
+        dataset = os.path.join(CALIB_DIR, f"{W}x{H}{args.calib_suffix}", "dataset.txt")
         for p in [onnx_path] + ([dataset] if args.backend == "rknn" and args.dtype == "i8" else []):
             if not os.path.exists(p):
                 sys.exit(f"missing {p}")
@@ -147,7 +163,6 @@ def extract(args, images, cache):
     return used
 
 
-# ---------------------------------------------------------------- stage 2: matching + metrics
 @torch.inference_mode()
 def match_cached(cache, seq, i0, i1):
     a, b = np.load(cache_path(cache, seq, i0)), np.load(cache_path(cache, seq, i1))
@@ -160,7 +175,10 @@ def parse_args():
     p.add_argument("--backend", choices=["onnx", "rknn"], required=True)
     p.add_argument("--dtype", choices=["fp16", "i8"], default="fp16", help="rknn only")
     p.add_argument("--quant-algo", choices=["normal", "mmse", "kl_divergence"], default="normal", help="rknn i8 only")
-    p.add_argument("--name", default="xfeat", help="model prefix: deploy/models/<name>_<W>x<H>.onnx")
+    p.add_argument("--name", default="xfeat", help="model prefix: <models-dir>/<name>_<W>x<H>.onnx")
+    p.add_argument("--models-dir", default=MODELS_DIR, help="e.g. deploy/models/s2d for space-to-depth models")
+    p.add_argument("--calib-suffix", default="",
+                   help="calibration dir deploy/calib/<W>x<H><suffix>, e.g. _s2d4 (make_calib.py --s2d 4)")
     p.add_argument("--width", type=int, default=640)
     p.add_argument("--height", type=int, default=480)
     p.add_argument("--data-dir", default=os.path.join(HERE, "data", "hpatches-sequences-release"))

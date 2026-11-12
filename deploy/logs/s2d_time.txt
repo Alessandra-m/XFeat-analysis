@@ -1,0 +1,30 @@
+== xfeat core_mask=1
+total weight size: 752704, total internal size: 20582400
+Avg Time 15.98ms, Avg FPS = 62.571
+== s2d2_conv core_mask=1
+total weight size: 701056, total internal size: 6144000
+Avg Time 6.29ms, Avg FPS = 159.005
+== s2d2_cpu core_mask=1
+total weight size: 688768, total internal size: 6144000
+Avg Time 6.16ms, Avg FPS = 162.220
+== s2d4_conv core_mask=1
+total weight size: 723584, total internal size: 3072000
+Avg Time 4.55ms, Avg FPS = 219.634
+== s2d4_cpu core_mask=1
+total weight size: 723584, total internal size: 3072000
+Avg Time 4.62ms, Avg FPS = 216.370
+== xfeat core_mask=7
+total weight size: 752704, total internal size: 20582400
+Avg Time 8.60ms, Avg FPS = 116.345
+== s2d2_conv core_mask=7
+total weight size: 701056, total internal size: 6144000
+Avg Time 3.28ms, Avg FPS = 305.067
+== s2d2_cpu core_mask=7
+total weight size: 688768, total internal size: 6144000
+Avg Time 3.28ms, Avg FPS = 304.765
+== s2d4_conv core_mask=7
+total weight size: 723584, total internal size: 3072000
+Avg Time 2.76ms, Avg FPS = 362.021
+== s2d4_cpu core_mask=7
+total weight size: 723584, total internal size: 3072000
+Avg Time 2.80ms, Avg FPS = 357.203

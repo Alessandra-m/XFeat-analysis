@@ -1,0 +1,289 @@
+I rknn-toolkit2 version: 2.5.0
+I Loading :   0%|                                                            | 0/54 [00:00<?, ?it/s]I Loading : 100%|███████████████████████████████████████████████| 54/54 [00:00<00:00, 108421.45it/s]
+[1;33mW[0m [1;33mload_onnx: The config.mean_values is None, zeros will be set for input 0![0m
+[1;33mW[0m [1;33mload_onnx: The config.std_values is None, ones will be set for input 0![0m
+D base_optimize ...
+D base_optimize done.
+D 
+D fold_constant ...
+D fold_constant done.
+D fold_constant remove nodes = ['/Concat_1', '/Slice_1', '/Shape_1', '/Concat', '/Slice', '/Shape']
+D Fixed the shape information of some tensor!
+D 
+D correct_ops ...
+D correct_ops done.
+D 
+D fuse_ops ...
+D fuse_ops done.
+D 
+D sparse_weight ...
+D sparse_weight done.
+D 
+I Quantize calibration include 50 samples.
+I GraphPreparing :   0%|                                                     | 0/56 [00:00<?, ?it/s]I GraphPreparing : 100%|█████████████████████████████████████████| 56/56 [00:00<00:00, 15684.88it/s]
+I Quantizating :   0%|                                                       | 0/56 [00:00<?, ?it/s]I Quantizating :   2%|▊                                              | 1/56 [00:00<00:12,  4.28it/s]I Quantizating :   4%|█▋                                             | 2/56 [00:00<00:09,  5.78it/s]I Quantizating :   5%|██▌                                            | 3/56 [00:00<00:11,  4.50it/s]I Quantizating :   9%|████▏                                          | 5/56 [00:00<00:08,  6.18it/s]I Quantizating :  12%|█████▉                                         | 7/56 [00:01<00:06,  7.96it/s]I Quantizating :  18%|████████▏                                     | 10/56 [00:01<00:04, 11.39it/s]I Quantizating :  21%|█████████▊                                    | 12/56 [00:01<00:04, 10.96it/s]I Quantizating :  25%|███████████▌                                  | 14/56 [00:01<00:03, 10.79it/s]I Quantizating :  29%|█████████████▏                                | 16/56 [00:01<00:03, 12.03it/s]I Quantizating :  32%|██████████████▊                               | 18/56 [00:01<00:03, 11.22it/s]I Quantizating :  38%|█████████████████▎                            | 21/56 [00:02<00:02, 14.23it/s]I Quantizating :  48%|██████████████████████▏                       | 27/56 [00:02<00:01, 22.85it/s]I Quantizating :  62%|████████████████████████████▊                 | 35/56 [00:02<00:00, 33.07it/s]I Quantizating :  70%|████████████████████████████████              | 39/56 [00:02<00:00, 24.27it/s]I Quantizating :  75%|██████████████████████████████████▌           | 42/56 [00:02<00:00, 20.42it/s]I Quantizating :  80%|████████████████████████████████████▉         | 45/56 [00:02<00:00, 21.84it/s]I Quantizating :  89%|█████████████████████████████████████████     | 50/56 [00:03<00:00, 26.00it/s]I Quantizating :  96%|████████████████████████████████████████████▎ | 54/56 [00:03<00:00, 27.43it/s]I Quantizating : 100%|██████████████████████████████████████████████| 56/56 [00:03<00:00, 17.37it/s]
+D 
+D quant_optimizer ...
+D quant_optimizer results:
+D     adjust_relu: ['/kp_rest/keypoint_head.2/layer/layer.2/Relu', '/kp_rest/keypoint_head.1/layer/layer.2/Relu', '/kp_rest/kp_rest.0/Relu', '/heatmap_head/heatmap_head.1/layer/layer.2/Relu', '/heatmap_head/heatmap_head.0/layer/layer.2/Relu', '/block_fusion/block_fusion.1/layer/layer.2/Relu', '/block_fusion/block_fusion.0/layer/layer.2/Relu', '/block5/block5.3/layer/layer.2/Relu', '/block5/block5.2/layer/layer.2/Relu', '/block5/block5.1/layer/layer.2/Relu', '/block5/block5.0/layer/layer.2/Relu', '/block4/block4.2/layer/layer.2/Relu', '/block4/block4.1/layer/layer.2/Relu', '/block4/block4.0/layer/layer.2/Relu', '/block3/block3.2/layer/layer.2/Relu', '/block3/block3.1/layer/layer.2/Relu', '/block3/block3.0/layer/layer.2/Relu', '/block2/block2.1/layer/layer.2/Relu', '/block2/block2.0/layer/layer.2/Relu', '/block1/block1.7/Relu', '/block1/block1.5/Relu', '/block1/block1.3/Relu', '/block1/block1.1/Relu']
+D     adjust_tanh_sigmoid: ['/heatmap_head/heatmap_head.3/Sigmoid']
+D     adjust_no_change_node: ['/Resize_1', '/Resize']
+D quant_optimizer done.
+D 
+[1;33mW[0m [1;33mbuild: The default input dtype of 'image_s2d' is changed from 'float32' to 'int8' in rknn model for performance!
+                       Please take care of this change when deploy rknn model with Runtime API![0m
+[1;33mW[0m [1;33mbuild: The default output dtype of 'feats' is changed from 'float32' to 'int8' in rknn model for performance!
+                      Please take care of this change when deploy rknn model with Runtime API![0m
+[1;33mW[0m [1;33mbuild: The default output dtype of 'keypoints' is changed from 'float32' to 'int8' in rknn model for performance!
+                      Please take care of this change when deploy rknn model with Runtime API![0m
+[1;33mW[0m [1;33mbuild: The default output dtype of 'heatmap' is changed from 'float32' to 'int8' in rknn model for performance!
+                      Please take care of this change when deploy rknn model with Runtime API![0m
+[1;33mW[0m [1;33mSet temperate env rknn_compute_order=WidthFirst[0m
+I rknn building ...
+I RKNN: [14:19:21.672] compress = 0, conv_eltwise_activation_fuse = 1, global_fuse = 1, multi-core-model-mode = 7, output_optimize = 1, layout_match = 1, enable_argb_group = 0, op_group_sram_opt = 0, enable_flash_attention = 0, op_group_nbuf_opt = 0, safe_fuse = 0, enable_core0_only_mode = 0, disable_first_conv = 0
+I RKNN: librknnc version: 2.5.0 (74ea630ce@2026-09-29T14:54:20)
+D RKNN: [14:19:21.682] RKNN is invoked
+W RKNN: [14:19:21.698] Model initializer tensor data is empty, name: empty_placeholder_0
+D RKNN: [14:19:21.698] >>>>>> start: rknn::RKNNExtractCustomOpAttrs
+D RKNN: [14:19:21.698] <<<<<<<< end: rknn::RKNNExtractCustomOpAttrs
+D RKNN: [14:19:21.698] >>>>>> start: rknn::RKNNSetOpTargetPass
+D RKNN: [14:19:21.698] <<<<<<<< end: rknn::RKNNSetOpTargetPass
+D RKNN: [14:19:21.698] >>>>>> start: rknn::RKNNBindNorm
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNBindNorm
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNEliminateQATDataConvert
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNEliminateQATDataConvert
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNConcatBypassPre
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNConcatBypassPre
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNConvStrideFixPass
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNConvStrideFixPass
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNTileGroupConv
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNTileGroupConv
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNAddConvBias
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNAddConvBias
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNTileChannel
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNTileChannel
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNDuplicateWeightPass
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNDuplicateWeightPass
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNInitRNNConst
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNInitRNNConst
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNPerChannelPrep
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNPerChannelPrep
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNReplaceConstantTensorPass
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNReplaceConstantTensorPass
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNBnQuant
+D RKNN: [14:19:21.699] <<<<<<<< end: rknn::RKNNBnQuant
+D RKNN: [14:19:21.699] >>>>>> start: rknn::RKNNFuseOptimizerPass
+D RKNN: [14:19:21.701] <<<<<<<< end: rknn::RKNNFuseOptimizerPass
+D RKNN: [14:19:21.701] >>>>>> start: rknn::RKNNTurnAutoPad
+D RKNN: [14:19:21.701] <<<<<<<< end: rknn::RKNNTurnAutoPad
+D RKNN: [14:19:21.701] >>>>>> start: rknn::RKNNInitCastConst
+D RKNN: [14:19:21.701] <<<<<<<< end: rknn::RKNNInitCastConst
+D RKNN: [14:19:21.701] >>>>>> start: rknn::RKNNMultiSurfacePass
+D RKNN: [14:19:21.701] <<<<<<<< end: rknn::RKNNMultiSurfacePass
+D RKNN: [14:19:21.701] >>>>>> start: rknn::RKNNSubgraphManager
+D RKNN: [14:19:21.701] <<<<<<<< end: rknn::RKNNSubgraphManager
+D RKNN: [14:19:21.701] >>>>>> start: OpEmit
+D RKNN: [14:19:21.701] <<<<<<<< end: OpEmit
+D RKNN: [14:19:21.701] >>>>>> start: rknn::RKNNAddFirstConv
+D RKNN: [14:19:21.701] <<<<<<<< end: rknn::RKNNAddFirstConv
+D RKNN: [14:19:21.701] >>>>>> start: rknn::RKNNTilingPass
+D RKNN: [14:19:21.702] <<<<<<<< end: rknn::RKNNTilingPass
+D RKNN: [14:19:21.702] >>>>>> start: rknn::RKNNLayoutMatchPass
+D RKNN: [14:19:21.702] <<<<<<<< end: rknn::RKNNLayoutMatchPass
+D RKNN: [14:19:21.702] >>>>>> start: rknn::RKNNAddSecondaryNode
+D RKNN: [14:19:21.702] <<<<<<<< end: rknn::RKNNAddSecondaryNode
+D RKNN: [14:19:21.702] >>>>>> start: rknn::RKNNAllocateConvCachePass
+D RKNN: [14:19:21.702] <<<<<<<< end: rknn::RKNNAllocateConvCachePass
+D RKNN: [14:19:21.702] >>>>>> start: OpEmit
+D RKNN: [14:19:21.705] <<<<<<<< end: OpEmit
+D RKNN: [14:19:21.705] >>>>>> start: rknn::RKNNSubGraphMemoryPlanPass
+D RKNN: [14:19:21.705] <<<<<<<< end: rknn::RKNNSubGraphMemoryPlanPass
+D RKNN: [14:19:21.705] >>>>>> start: rknn::RKNNProfileAnalysisPass
+D RKNN: [14:19:21.705] <<<<<<<< end: rknn::RKNNProfileAnalysisPass
+D RKNN: [14:19:21.705] >>>>>> start: rknn::RKNNOperatorIdGenPass
+D RKNN: [14:19:21.705] <<<<<<<< end: rknn::RKNNOperatorIdGenPass
+D RKNN: [14:19:21.705] >>>>>> start: rknn::RKNNWeightTransposePass
+W RKNN: [14:19:21.714] Warning: Tensor /Concat_output_0 need parameter qtype, type is set to float16 by default!
+W RKNN: [14:19:21.714] Warning: Tensor empty_placeholder_0 need parameter qtype, type is set to float16 by default!
+W RKNN: [14:19:21.714] Warning: Tensor /Concat_1_output_0 need parameter qtype, type is set to float16 by default!
+W RKNN: [14:19:21.714] Warning: Tensor empty_placeholder_0 need parameter qtype, type is set to float16 by default!
+D RKNN: [14:19:21.714] <<<<<<<< end: rknn::RKNNWeightTransposePass
+D RKNN: [14:19:21.714] >>>>>> start: rknn::RKNNCPUWeightTransposePass
+D RKNN: [14:19:21.714] <<<<<<<< end: rknn::RKNNCPUWeightTransposePass
+D RKNN: [14:19:21.714] >>>>>> start: rknn::RKNNModelBuildPass
+D RKNN: [14:19:21.719] <<<<<<<< end: rknn::RKNNModelBuildPass
+D RKNN: [14:19:21.719] >>>>>> start: rknn::RKNNModelRegCmdbuildPass
+D RKNN: [14:19:21.721] --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [14:19:21.721]                                                         Network Layer Information Table                                                      
+D RKNN: [14:19:21.721] --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [14:19:21.721] ID   OpType             DataType Target InputShape                               OutputShape            Cycles(DDR/NPU/Total)    RW(KB)       FullName        
+D RKNN: [14:19:21.721] --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [14:19:21.721] 0    InputOperator      INT8     CPU    \                                        (1,4,240,320)          0/0/0                    0            InputOperator:image_s2d
+D RKNN: [14:19:21.721] 1    Conv               INT8     NPU    (1,4,240,320),(24,4,2,2),(24)            (1,24,120,160)         39038/76800/76800        301          Conv:/skip1/Conv
+D RKNN: [14:19:21.721] 2    ConvRelu           INT8     NPU    (1,4,240,320),(16,4,3,3),(16)            (1,16,240,320)         65045/691200/691200      302          Conv:/block1/block1.0/Conv
+D RKNN: [14:19:21.721] 3    ConvRelu           INT8     NPU    (1,4,240,320),(64,4,4,4),(64)            (1,64,60,80)           26689/153600/153600      316          Conv:/kp0/Conv  
+D RKNN: [14:19:21.721] 4    ConvRelu           INT8     NPU    (1,16,240,320),(8,16,3,3),(8)            (1,8,240,320)          103958/691200/691200     1201         Conv:/block1/block1.2/Conv
+D RKNN: [14:19:21.721] 5    ConvRelu           INT8     NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           26170/38400/38400        304          Conv:/kp_rest/keypoint_head.1/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 6    ConvRelu           INT8     NPU    (1,8,240,320),(8,8,3,3),(8)              (1,8,240,320)          103958/691200/691200     1201         Conv:/block1/block1.4/Conv
+D RKNN: [14:19:21.721] 7    ConvRelu           INT8     NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           26170/38400/38400        304          Conv:/kp_rest/keypoint_head.2/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 8    Conv               INT8     NPU    (1,64,60,80),(65,64,1,1),(65)            (1,65,60,80)           32677/57600/57600        304          Conv:/kp_rest/keypoint_head.3/Conv
+D RKNN: [14:19:21.721] 9    OutputOperator     INT8     CPU    (1,65,60,80)                             \                      0/0/0                    450          OutputOperator:keypoints
+D RKNN: [14:19:21.721] 10   ConvReluAdd        INT8     NPU    (1,8,240,320),(24,8,3,3),(24),...        (1,24,120,160)         104055/172800/172800     1803         Conv:/block1/block1.6/Conv
+D RKNN: [14:19:21.721] 11   ConvRelu           INT8     NPU    (1,24,120,160),(24,24,3,3),(24)          (1,24,120,160)         52252/172800/172800      607          Conv:/block2/block2.0/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 12   ConvRelu           INT8     NPU    (1,24,120,160),(24,24,3,3),(24)          (1,24,120,160)         52252/172800/172800      607          Conv:/block2/block2.1/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 13   ConvRelu           INT8     NPU    (1,24,120,160),(64,24,3,3),(64)          (1,64,60,80)           39763/86400/86400        618          Conv:/block3/block3.0/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 14   ConvRelu           INT8     NPU    (1,64,60,80),(64,64,3,3),(64)            (1,64,60,80)           27555/172800/172800      336          Conv:/block3/block3.1/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 15   ConvRelu           INT8     NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           26170/38400/38400        304          Conv:/block3/block3.2/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 16   ConvRelu           INT8     NPU    (1,64,60,80),(64,64,3,3),(64)            (1,64,30,40)           17815/43200/43200        336          Conv:/block4/block4.0/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 17   ConvRelu           INT8     NPU    (1,64,30,40),(64,64,3,3),(64)            (1,64,30,40)           8074/43200/43200         111          Conv:/block4/block4.1/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 18   ConvRelu           INT8     NPU    (1,64,30,40),(64,64,3,3),(64)            (1,64,30,40)           8074/43200/43200         111          Conv:/block4/block4.2/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 19   ConvRelu           INT8     NPU    (1,64,30,40),(128,64,3,3),(128)          (1,128,15,20)          8031/21888/21888         148          Conv:/block5/block5.0/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 20   ConvRelu           INT8     NPU    (1,128,15,20),(128,128,3,3),(128)        (1,128,15,20)          9524/43776/43776         182          Conv:/block5/block5.1/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 21   ConvRelu           INT8     NPU    (1,128,15,20),(128,128,3,3),(128)        (1,128,15,20)          9524/43776/43776         182          Conv:/block5/block5.2/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 22   ConvRelu           INT8     NPU    (1,128,15,20),(64,128,1,1),(64)          (1,64,15,20)           2804/2432/2804           46           Conv:/block5/block5.3/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 23   Resize             INT8     NPU    (1,64,30,40),(1),(1),(4)                 (1,64,60,80)           0/0/0                    75           Resize:/Resize  
+D RKNN: [14:19:21.721] 24   Add                INT8     NPU    (1,64,60,80),(1,64,60,80)                (1,64,60,80)           0/0/0                    600          Add:/Add_1      
+D RKNN: [14:19:21.721] 25   Resize             INT8     NPU    (1,64,15,20),(1),(1),(4)                 (1,64,60,80)           0/0/0                    18           Resize:/Resize_1
+D RKNN: [14:19:21.721] 26   Add                INT8     NPU    (1,64,60,80),(1,64,60,80)                (1,64,60,80)           0/0/0                    600          Add:/Add_2      
+D RKNN: [14:19:21.721] 27   ConvRelu           INT8     NPU    (1,64,60,80),(64,64,3,3),(64)            (1,64,60,80)           27555/172800/172800      336          Conv:/block_fusion/block_fusion.0/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 28   ConvRelu           INT8     NPU    (1,64,60,80),(64,64,3,3),(64)            (1,64,60,80)           27555/172800/172800      336          Conv:/block_fusion/block_fusion.1/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 29   Conv               INT8     NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           26170/38400/38400        304          Conv:/block_fusion/block_fusion.2/Conv
+D RKNN: [14:19:21.721] 30   OutputOperator     INT8     CPU    (1,64,60,80)                             \                      0/0/0                    300          OutputOperator:feats
+D RKNN: [14:19:21.721] 31   ConvRelu           INT8     NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           26170/38400/38400        304          Conv:/heatmap_head/heatmap_head.0/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 32   ConvRelu           INT8     NPU    (1,64,60,80),(64,64,1,1),(64)            (1,64,60,80)           26170/38400/38400        304          Conv:/heatmap_head/heatmap_head.1/layer/layer.0/Conv
+D RKNN: [14:19:21.721] 33   ConvSigmoid        INT8     NPU    (1,64,60,80),(1,64,1,1),(1)              (1,1,60,80)            19492/19200/19492        300          Conv:/heatmap_head/heatmap_head.2/Conv
+D RKNN: [14:19:21.721] 34   OutputOperator     INT8     CPU    (1,1,60,80)                              \                      0/0/0                    150          OutputOperator:heatmap
+D RKNN: [14:19:21.721] --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [14:19:21.721] <<<<<<<< end: rknn::RKNNModelRegCmdbuildPass
+D RKNN: [14:19:21.721] >>>>>> start: rknn::RKNNModelExportPass
+D RKNN: [14:19:21.721] Export RKNN model to /tmp/tmpwi_k1p0e/check.rknn
+D RKNN: [14:19:21.723] <<<<<<<< end: rknn::RKNNModelExportPass
+D RKNN: [14:19:21.723] >>>>>> start: rknn::RKNNMemStatisticsPass
+D RKNN: [14:19:21.723] ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+D RKNN: [14:19:21.723]                                                        Feature Tensor Information Table                                                  
+D RKNN: [14:19:21.723] -----------------------------------------------------------------------------------------------------------------------------------+---------------------------------
+D RKNN: [14:19:21.723] ID  User           Tensor                                                   DataType  DataFormat   OrigShape      NativeShape      |     [Start       End)       Size
+D RKNN: [14:19:21.723] -----------------------------------------------------------------------------------------------------------------------------------+---------------------------------
+D RKNN: [14:19:21.723] 1   Conv           image_s2d                                                INT8      NC1HWC2      (1,4,240,320)  (1,1,240,320,4)  | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 2   ConvRelu       image_s2d                                                INT8      NC1HWC2      (1,4,240,320)  (1,1,240,320,4)  | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 3   ConvRelu       image_s2d                                                INT8      NC1HWC2      (1,4,240,320)  (1,1,240,320,4)  | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 4   ConvRelu       /block1/block1.1/Relu_output_0                           INT8      NC1HWC2      (1,16,240,320) (1,2,240,320,16) | 0x000e1000 0x00339000 0x00258000
+D RKNN: [14:19:21.723] 5   ConvRelu       /kp_rest/kp_rest.0/Relu_output_0                         INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00339000 0x00384000 0x0004b000
+D RKNN: [14:19:21.723] 6   ConvRelu       /block1/block1.3/Relu_output_0                           INT8      NC1HWC2      (1,8,240,320)  (1,2,240,320,16) | 0x00384000*0x005dc000 0x00258000
+D RKNN: [14:19:21.723] 7   ConvRelu       /kp_rest/keypoint_head.1/layer/layer.2/Relu_output_0     INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 8   Conv           /kp_rest/keypoint_head.2/layer/layer.2/Relu_output_0     INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00339000 0x00384000 0x0004b000
+D RKNN: [14:19:21.723] 9   OutputOperator keypoints                                                INT8      NC1HWC2      (1,65,60,80)   (1,6,60,80,16)   | 0x00384000 0x003f4800 0x00070800
+D RKNN: [14:19:21.723] 10  ConvReluAdd    /block1/block1.5/Relu_output_0                           INT8      NC1HWC2      (1,8,240,320)  (1,2,240,320,16) | 0x000e1000 0x00339000 0x00258000
+D RKNN: [14:19:21.723] 10  ConvReluAdd    /skip1/Conv_output_0                                     INT8      NC1HWC2      (1,24,120,160) (1,2,120,160,16) | 0x0004b000 0x000e1000 0x00096000
+D RKNN: [14:19:21.723] 11  ConvRelu       /Add_output_0                                            INT8      NC1HWC2      (1,24,120,160) (1,2,120,160,16) | 0x003f4800 0x0048a800 0x00096000
+D RKNN: [14:19:21.723] 12  ConvRelu       /block2/block2.0/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,24,120,160) (1,2,120,160,16) | 0x00000000 0x00096000 0x00096000
+D RKNN: [14:19:21.723] 13  ConvRelu       /block2/block2.1/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,24,120,160) (1,2,120,160,16) | 0x00096000 0x0012c000 0x00096000
+D RKNN: [14:19:21.723] 14  ConvRelu       /block3/block3.0/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 15  ConvRelu       /block3/block3.1/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x0004b000 0x00096000 0x0004b000
+D RKNN: [14:19:21.723] 16  ConvRelu       /block3/block3.2/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 17  ConvRelu       /block4/block4.0/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,30,40)   (1,4,30,40,16)   | 0x0004b000 0x0005dc00 0x00012c00
+D RKNN: [14:19:21.723] 18  ConvRelu       /block4/block4.1/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,30,40)   (1,4,30,40,16)   | 0x0005dc00 0x00070800 0x00012c00
+D RKNN: [14:19:21.723] 19  ConvRelu       /block4/block4.2/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,30,40)   (1,4,30,40,16)   | 0x0004b000 0x0005dc00 0x00012c00
+D RKNN: [14:19:21.723] 20  ConvRelu       /block5/block5.0/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,128,15,20)  (1,8,15,20,16)   | 0x0005dc00 0x00067200 0x00009600
+D RKNN: [14:19:21.723] 21  ConvRelu       /block5/block5.1/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,128,15,20)  (1,8,15,20,16)   | 0x00067200 0x00070800 0x00009600
+D RKNN: [14:19:21.723] 22  ConvRelu       /block5/block5.2/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,128,15,20)  (1,8,15,20,16)   | 0x0005dc00 0x00067200 0x00009600
+D RKNN: [14:19:21.723] 23  Resize         /block4/block4.2/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,30,40)   (1,4,30,40,16)   | 0x0004b000 0x0005dc00 0x00012c00
+D RKNN: [14:19:21.723] 23  Resize         /block4/block4.2/layer/layer.2/Relu_output_0_exSecondary INT8      NC1HWC2      (1,64,32,42)   (1,4,32,42,16)   | 0x0006bd00 0x00080d00 0x00015000
+D RKNN: [14:19:21.723] 24  Add            /block3/block3.2/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 24  Add            /Resize_output_0                                         INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00080d00 0x000cbd00 0x0004b000
+D RKNN: [14:19:21.723] 25  Resize         /block5/block5.3/layer/layer.2/Relu_output_0             INT8      NC1HWC2      (1,64,15,20)   (1,4,15,20,16)   | 0x00067200 0x0006bd00 0x00004b00
+D RKNN: [14:19:21.723] 25  Resize         /block5/block5.3/layer/layer.2/Relu_output_0_exSecondary INT8      NC1HWC2      (1,64,17,22)   (1,4,17,22,16)   | 0x0006bd00 0x00071b00 0x00005e00
+D RKNN: [14:19:21.723] 26  Add            /Add_1_output_0                                          INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x000cbd00 0x00116d00 0x0004b000
+D RKNN: [14:19:21.723] 26  Add            /Resize_1_output_0                                       INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00071b00 0x000bcb00 0x0004b000
+D RKNN: [14:19:21.723] 27  ConvRelu       /Add_2_output_0                                          INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 28  ConvRelu       /block_fusion/block_fusion.0/layer/layer.2/Relu_output_0 INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x0004b000 0x00096000 0x0004b000
+D RKNN: [14:19:21.723] 29  Conv           /block_fusion/block_fusion.1/layer/layer.2/Relu_output_0 INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 30  OutputOperator feats                                                    INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x0004b000 0x00096000 0x0004b000
+D RKNN: [14:19:21.723] 31  ConvRelu       feats                                                    INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x0004b000 0x00096000 0x0004b000
+D RKNN: [14:19:21.723] 32  ConvRelu       /heatmap_head/heatmap_head.0/layer/layer.2/Relu_output_0 INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00000000 0x0004b000 0x0004b000
+D RKNN: [14:19:21.723] 33  ConvSigmoid    /heatmap_head/heatmap_head.1/layer/layer.2/Relu_output_0 INT8      NC1HWC2      (1,64,60,80)   (1,4,60,80,16)   | 0x00096000 0x000e1000 0x0004b000
+D RKNN: [14:19:21.723] 34  OutputOperator heatmap                                                  INT8      NC1HWC2      (1,1,60,80)    (1,2,60,80,16)   | 0x00000000 0x00025800 0x00025800
+D RKNN: [14:19:21.723] -----------------------------------------------------------------------------------------------------------------------------------+---------------------------------
+D RKNN: [14:19:21.723] -----------------------------------------------------------------------------------------------------
+D RKNN: [14:19:21.723]                                  Const Tensor Information Table                    
+D RKNN: [14:19:21.723] -------------------------------------------------------------------+---------------------------------
+D RKNN: [14:19:21.723] ID  User        Tensor                     DataType  OrigShape     |     [Start       End)       Size
+D RKNN: [14:19:21.723] -------------------------------------------------------------------+---------------------------------
+D RKNN: [14:19:21.723] 1   Conv        skip1.weight               INT8      (24,4,2,2)    | 0x00004a00 0x00005000 0x00000600
+D RKNN: [14:19:21.723] 1   Conv        skip1.bias                 INT32     (24)          | 0x00005000 0x00005100 0x00000100
+D RKNN: [14:19:21.723] 2   ConvRelu    block1.0.weight            INT8      (16,4,3,3)    | 0x00002680 0x00002f80 0x00000900
+D RKNN: [14:19:21.723] 2   ConvRelu    block1.0.bias              INT32     (16)          | 0x00002f80 0x00003080 0x00000100
+D RKNN: [14:19:21.723] 3   ConvRelu    kp0.weight                 INT8      (64,4,4,4)    | 0x00005100 0x00009100 0x00004000
+D RKNN: [14:19:21.723] 3   ConvRelu    kp0.bias                   INT32     (64)          | 0x00009100 0x00009300 0x00000200
+D RKNN: [14:19:21.723] 4   ConvRelu    block1.2.weight            INT8      (8,16,3,3)    | 0x00003080 0x00003500 0x00000480
+D RKNN: [14:19:21.723] 4   ConvRelu    block1.2.bias              INT32     (8)           | 0x00003500 0x00003600 0x00000100
+D RKNN: [14:19:21.723] 5   ConvRelu    onnx::Conv_313             INT8      (64,64,1,1)   | 0x000a8500 0x000a9500 0x00001000
+D RKNN: [14:19:21.723] 5   ConvRelu    onnx::Conv_314             INT32     (64)          | 0x000a9500 0x000a9700 0x00000200
+D RKNN: [14:19:21.723] 6   ConvRelu    block1.4.weight            INT8      (8,8,3,3)     | 0x00003600 0x00003a80 0x00000480
+D RKNN: [14:19:21.723] 6   ConvRelu    block1.4.bias              INT32     (8)           | 0x00003a80 0x00003b80 0x00000100
+D RKNN: [14:19:21.723] 7   ConvRelu    onnx::Conv_316             INT8      (64,64,1,1)   | 0x000a9700 0x000aa700 0x00001000
+D RKNN: [14:19:21.723] 7   ConvRelu    onnx::Conv_317             INT32     (64)          | 0x000aa700 0x000aa900 0x00000200
+D RKNN: [14:19:21.723] 8   Conv        net.keypoint_head.3.weight INT8      (65,64,1,1)   | 0x00001300 0x00002380 0x00001080
+D RKNN: [14:19:21.723] 8   Conv        net.keypoint_head.3.bias   INT32     (65)          | 0x00002380 0x00002680 0x00000300
+D RKNN: [14:19:21.723] 10  ConvReluAdd block1.6.weight            INT8      (24,8,3,3)    | 0x00003b80 0x00004900 0x00000d80
+D RKNN: [14:19:21.723] 10  ConvReluAdd block1.6.bias              INT32     (24)          | 0x00004900 0x00004a00 0x00000100
+D RKNN: [14:19:21.723] 11  ConvRelu    onnx::Conv_265             INT8      (24,24,3,3)   | 0x00009300 0x0000ae00 0x00001b00
+D RKNN: [14:19:21.723] 11  ConvRelu    onnx::Conv_266             INT32     (24)          | 0x0000ae00 0x0000af00 0x00000100
+D RKNN: [14:19:21.723] 12  ConvRelu    onnx::Conv_268             INT8      (24,24,3,3)   | 0x0000af00 0x0000ca00 0x00001b00
+D RKNN: [14:19:21.723] 12  ConvRelu    onnx::Conv_269             INT32     (24)          | 0x0000ca00 0x0000cb00 0x00000100
+D RKNN: [14:19:21.723] 13  ConvRelu    onnx::Conv_271             INT8      (64,24,3,3)   | 0x0000cb00 0x00011300 0x00004800
+D RKNN: [14:19:21.723] 13  ConvRelu    onnx::Conv_272             INT32     (64)          | 0x00011300 0x00011500 0x00000200
+D RKNN: [14:19:21.723] 14  ConvRelu    onnx::Conv_274             INT8      (64,64,3,3)   | 0x00011500 0x0001a500 0x00009000
+D RKNN: [14:19:21.723] 14  ConvRelu    onnx::Conv_275             INT32     (64)          | 0x0001a500 0x0001a700 0x00000200
+D RKNN: [14:19:21.723] 15  ConvRelu    onnx::Conv_277             INT8      (64,64,1,1)   | 0x0001a700 0x0001b700 0x00001000
+D RKNN: [14:19:21.723] 15  ConvRelu    onnx::Conv_278             INT32     (64)          | 0x0001b700 0x0001b900 0x00000200
+D RKNN: [14:19:21.723] 16  ConvRelu    onnx::Conv_280             INT8      (64,64,3,3)   | 0x0001b900 0x00024900 0x00009000
+D RKNN: [14:19:21.723] 16  ConvRelu    onnx::Conv_281             INT32     (64)          | 0x00024900 0x00024b00 0x00000200
+D RKNN: [14:19:21.723] 17  ConvRelu    onnx::Conv_283             INT8      (64,64,3,3)   | 0x00024b00 0x0002db00 0x00009000
+D RKNN: [14:19:21.723] 17  ConvRelu    onnx::Conv_284             INT32     (64)          | 0x0002db00 0x0002dd00 0x00000200
+D RKNN: [14:19:21.723] 18  ConvRelu    onnx::Conv_286             INT8      (64,64,3,3)   | 0x0002dd00 0x00036d00 0x00009000
+D RKNN: [14:19:21.723] 18  ConvRelu    onnx::Conv_287             INT32     (64)          | 0x00036d00 0x00036f00 0x00000200
+D RKNN: [14:19:21.723] 19  ConvRelu    onnx::Conv_289             INT8      (128,64,3,3)  | 0x00036f00 0x00048f00 0x00012000
+D RKNN: [14:19:21.723] 19  ConvRelu    onnx::Conv_290             INT32     (128)         | 0x00048f00 0x00049300 0x00000400
+D RKNN: [14:19:21.723] 20  ConvRelu    onnx::Conv_292             INT8      (128,128,3,3) | 0x00049300 0x0006d300 0x00024000
+D RKNN: [14:19:21.723] 20  ConvRelu    onnx::Conv_293             INT32     (128)         | 0x0006d300 0x0006d700 0x00000400
+D RKNN: [14:19:21.723] 21  ConvRelu    onnx::Conv_295             INT8      (128,128,3,3) | 0x0006d700 0x00091700 0x00024000
+D RKNN: [14:19:21.723] 21  ConvRelu    onnx::Conv_296             INT32     (128)         | 0x00091700 0x00091b00 0x00000400
+D RKNN: [14:19:21.723] 22  ConvRelu    onnx::Conv_298             INT8      (64,128,1,1)  | 0x00091b00 0x00093b00 0x00002000
+D RKNN: [14:19:21.723] 22  ConvRelu    onnx::Conv_299             INT32     (64)          | 0x00093b00 0x00093d00 0x00000200
+D RKNN: [14:19:21.723] 23  Resize      empty_placeholder_0        FLOAT     (1)           | 0x000aa980 0x000aaa80 0x00000100
+D RKNN: [14:19:21.723] 23  Resize      empty_placeholder_0        FLOAT     (1)           | 0x000aa980 0x000aaa80 0x00000100
+D RKNN: [14:19:21.723] 23  Resize      /Concat_output_0           INT64     (4)           | 0x000aa900 0x000aa920 0x00000020
+D RKNN: [14:19:21.723] 25  Resize      empty_placeholder_0        FLOAT     (1)           | 0x000aa980 0x000aaa80 0x00000100
+D RKNN: [14:19:21.723] 25  Resize      empty_placeholder_0        FLOAT     (1)           | 0x000aa980 0x000aaa80 0x00000100
+D RKNN: [14:19:21.723] 25  Resize      /Concat_1_output_0         INT64     (4)           | 0x000aa940 0x000aa960 0x00000020
+D RKNN: [14:19:21.723] 27  ConvRelu    onnx::Conv_301             INT8      (64,64,3,3)   | 0x00093d00 0x0009c[1;33mW[0m [1;33mRestore temperate env rknn_compute_order=[0m
+I rknn building done.
+I Target is None, use simulator!
+compress=0, global_fuse=1, safe_fuse=0, output_optimize=1, op_group_sram_opt=0, op_group_nbuf_opt=0, enable_flash_attention=0, conv_eltwise_activation_fuse=1, enable_rnn_loop=1, memory_plan_strategy=BestFit, enable_core0_only_mode=0, disable_first_conv=0
+--> saved deploy/models/s2d/xfeat_s2d2_conv_640x480_i8.rknn (1.08 MB)
+I GraphPreparing :   0%|                                                     | 0/60 [00:00<?, ?it/s]I GraphPreparing : 100%|█████████████████████████████████████████| 60/60 [00:00<00:00, 10185.71it/s]
+I SessionPreparing :   0%|                                                   | 0/60 [00:00<?, ?it/s]I SessionPreparing : 100%|████████████████████████████████████████| 60/60 [00:00<00:00, 3546.03it/s]
+--> simulator (i8) vs onnxruntime, input image_s2d (1, 4, 240, 320):
+    feats     cos=0.99555  max|diff|=9.709e-01  ref range=[-7.46, 7.33]
+    keypoints cos=0.99473  max|diff|=4.777e+00  ref range=[-35.15, 10.49]
+    heatmap   cos=0.99624  max|diff|=1.160e-01  ref range=[0.01, 0.73]
+    descriptors: mean per-cell cosine = 0.99554
+d00 0x00009000
+D RKNN: [14:19:21.723] 27  ConvRelu    onnx::Conv_302             INT32     (64)          | 0x0009cd00 0x0009cf00 0x00000200
+D RKNN: [14:19:21.723] 28  ConvRelu    onnx::Conv_304             INT8      (64,64,3,3)   | 0x0009cf00 0x000a5f00 0x00009000
+D RKNN: [14:19:21.723] 28  ConvRelu    onnx::Conv_305             INT32     (64)          | 0x000a5f00 0x000a6100 0x00000200
+D RKNN: [14:19:21.723] 29  Conv        net.block_fusion.2.weight  INT8      (64,64,1,1)   | 0x00000000 0x00001000 0x00001000
+D RKNN: [14:19:21.723] 29  Conv        net.block_fusion.2.bias    INT32     (64)          | 0x00001000 0x00001200 0x00000200
+D RKNN: [14:19:21.723] 31  ConvRelu    onnx::Conv_307             INT8      (64,64,1,1)   | 0x000a6100 0x000a7100 0x00001000
+D RKNN: [14:19:21.723] 31  ConvRelu    onnx::Conv_308             INT32     (64)          | 0x000a7100 0x000a7300 0x00000200
+D RKNN: [14:19:21.723] 32  ConvRelu    onnx::Conv_310             INT8      (64,64,1,1)   | 0x000a7300 0x000a8300 0x00001000
+D RKNN: [14:19:21.723] 32  ConvRelu    onnx::Conv_311             INT32     (64)          | 0x000a8300 0x000a8500 0x00000200
+D RKNN: [14:19:21.723] 33  ConvSigmoid net.heatmap_head.2.weight  INT8      (1,64,1,1)    | 0x00001200 0x00001280 0x00000080
+D RKNN: [14:19:21.723] 33  ConvSigmoid net.heatmap_head.2.bias    INT32     (1)           | 0x00001280 0x00001300 0x00000080
+D RKNN: [14:19:21.723] -------------------------------------------------------------------+---------------------------------
+D RKNN: [14:19:21.723] ----------------------------------------
+D RKNN: [14:19:21.723] Total Internal Memory Size: 6000KB
+D RKNN: [14:19:21.723] Total Weight Memory Size: 684.625KB
+D RKNN: [14:19:21.723] ----------------------------------------
+D RKNN: [14:19:21.723] <<<<<<<< end: rknn::RKNNMemStatisticsPass

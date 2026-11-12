@@ -1,0 +1,40 @@
+== p0_min core_mask=1
+Avg Time 1.67ms, Avg FPS = 599.499
+== p1_block1 core_mask=1
+Avg Time 9.65ms, Avg FPS = 103.621
+== p2_block2 core_mask=1
+Avg Time 10.14ms, Avg FPS = 98.628
+== p3_block3 core_mask=1
+Avg Time 10.56ms, Avg FPS = 94.689
+== p4_desc core_mask=1
+Avg Time 12.16ms, Avg FPS = 82.231
+== p5_kpts core_mask=1
+Avg Time 3.56ms, Avg FPS = 280.968
+== gray_nopre core_mask=1
+Avg Time 17.91ms, Avg FPS = 55.825
+== gray_nopost core_mask=1
+Avg Time 31.40ms, Avg FPS = 31.843
+== xfeat core_mask=1
+Avg Time 15.99ms, Avg FPS = 62.529
+== gray core_mask=1
+Avg Time 33.34ms, Avg FPS = 29.995
+== p0_min core_mask=7
+Avg Time 0.68ms, Avg FPS = 1460.259
+== p1_block1 core_mask=7
+Avg Time 4.93ms, Avg FPS = 203.005
+== p2_block2 core_mask=7
+Avg Time 5.09ms, Avg FPS = 196.282
+== p3_block3 core_mask=7
+Avg Time 5.27ms, Avg FPS = 189.764
+== p4_desc core_mask=7
+Avg Time 7.07ms, Avg FPS = 141.390
+== p5_kpts core_mask=7
+Avg Time 1.39ms, Avg FPS = 721.345
+== gray_nopre core_mask=7
+Avg Time 10.79ms, Avg FPS = 92.708
+== gray_nopost core_mask=7
+Avg Time 23.82ms, Avg FPS = 41.982
+== xfeat core_mask=7
+Avg Time 8.62ms, Avg FPS = 115.993
+== gray core_mask=7
+Avg Time 25.79ms, Avg FPS = 38.769

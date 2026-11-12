@@ -1,0 +1,4 @@
+E RKNN: [15:30:49.351] rknn_init, failed to read model file: /root/rknn_mobilenet_demo/model/mobilenet_v2.rknn
+I RKNN: [15:30:49.351] RKNN Runtime Information, librknnrt version: 2.5.0 (74ea630ce8@2026-09-30T09:41:17)
+I RKNN: [15:30:49.351] RKNN Driver Information, version: 0.9.8
+rknn_init fail! ret=-6
